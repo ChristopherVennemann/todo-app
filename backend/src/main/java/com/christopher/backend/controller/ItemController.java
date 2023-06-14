@@ -23,6 +23,6 @@ public class ItemController {
     @GetMapping("/items")
     public ResponseEntity<List<Item>> getItems() {
         List<Item> items = itemService.getItems();
-        return new ResponseEntity<List<>>(items, HttpStatus.OK);
+        return new ResponseEntity<>(items, HttpStatus.OK);
     }
 }
