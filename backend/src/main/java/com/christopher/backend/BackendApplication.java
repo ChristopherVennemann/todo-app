@@ -24,7 +24,7 @@ public class BackendApplication implements CommandLineRunner {
 		Item[] items = new Item[] {
 				new Item("item 1", 1L),
 				new Item("item 2", 2L),
-				new Item("item 3", 3L),
+				new Item("item 3 long item", 3L),
 				new Item("item 4", 4L)
 		};
 		itemRepository.saveAll(Arrays.asList(items));
