@@ -1,18 +1,22 @@
-<script setup>
-import {inject} from 'vue'
+<script setup lang="ts">
+import axios from "axios";
+import {onMounted, ref} from "vue";
 
-const axios = inject('axios')
+let items = ref([])
 
-const getList = () => {
-  axios.get('http://localhost:8082/items')
-      .then((response) => {
-        console.log(response.data)
-      })
+async function getData() {
+  const response = await axios.get('http://localhost:8082/items')
+  return response.data
 }
-axios
+
+onMounted(async () => {
+  items.value = await getData()
+})
 </script>
 
 <template>
-  <p>Hello frontend</p>
-  <button @click="getList">get backend</button>
+  <h3>TO-DO-LIST 2000</h3>
+  <ul>
+    <li v-for="item in items">{{ item.message }}</li>
+  </ul>
 </template>
