@@ -8,7 +8,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.Arrays;
-import java.util.List;
 
 @SpringBootApplication
 public class BackendApplication implements CommandLineRunner {
@@ -25,17 +24,9 @@ public class BackendApplication implements CommandLineRunner {
 		Item[] items = new Item[] {
 				new Item("item 1", 1L),
 				new Item("item 2", 2L),
-				new Item("item 3", 3L)
+				new Item("item 3", 3L),
+				new Item("item 4", 4L)
 		};
-
 		itemRepository.saveAll(Arrays.asList(items));
-
-		List<Item> retrievedItems = (List<Item>) itemRepository.findAll();
-
-		for (Item item : retrievedItems) {
-			System.out.println(item.getMessage());
-		}
 	}
-
-
 }
