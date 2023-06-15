@@ -28,8 +28,8 @@ public class ItemServiceTest {
     @Test
     public void shouldReturnItemList() {
         when(itemRepository.findAll()).thenReturn(Arrays.asList(
-                new Item("item1", 1),
-                new Item("item2", 2)
+                new Item("item1", 1L),
+                new Item("item2", 2L)
         ));
 
         List<Item> result = itemService.getItems();
