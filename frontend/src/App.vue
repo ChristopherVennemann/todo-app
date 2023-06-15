@@ -19,7 +19,7 @@ onMounted(async () => {
     <h1>TO-DO-LIST 2000</h1>
   </div>
 
-  <div class="item-list-wrapper center-flex">
+  <div class="center-flex">
     <div class="item-list center-flex">
       <div class="item new-item center-flex">
         <input type="text" placeholder="new item..."/>
@@ -55,10 +55,6 @@ onMounted(async () => {
 
 .title-wrapper {
   flex-direction: row;
-}
-
-.item-list-wrapper {
-
 }
 
 .item-list {
@@ -104,7 +100,8 @@ input {
 }
 
 button {
-  width: 20%;
+  width: fit-content;
+  white-space: nowrap;
   margin-left: 1em;
   margin-right: 0.5em;
 }
