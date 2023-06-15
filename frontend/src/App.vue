@@ -71,8 +71,8 @@ onMounted(async () => {
   padding: 0.25em;
   border: 1px solid rgba(255,255,255,0);
   border-radius: 0.4em;
-  -webkit-box-shadow: 2px 2px 6px 0px rgba(0,0,0,0.5);
-  box-shadow: 2px 2px 6px 0px rgba(0,0,0,0.5);
+  -webkit-box-shadow: 2px 2px 6px 0 rgba(0,0,0,0.5);
+  box-shadow: 2px 2px 6px 0 rgba(0,0,0,0.5);
   background-color: rgba(255,255,255,0.8);
 }
 
@@ -107,5 +107,9 @@ button {
   width: 20%;
   margin-left: 1em;
   margin-right: 0.5em;
+}
+
+button:hover {
+  cursor: pointer;
 }
 </style>
