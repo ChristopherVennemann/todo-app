@@ -1,7 +1,7 @@
-package com.christopher.backend.service;
+package com.christopher.todo_app.service;
 
-import com.christopher.backend.entity.Item;
-import com.christopher.backend.repository.ItemRepository;
+import com.christopher.todo_app.entity.Item;
+import com.christopher.todo_app.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

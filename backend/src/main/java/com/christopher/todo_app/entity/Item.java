@@ -1,4 +1,4 @@
-package com.christopher.backend.entity;
+package com.christopher.todo_app.entity;
 
 import jakarta.persistence.*;
 
