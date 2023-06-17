@@ -6,8 +6,8 @@ import com.christopher.backend.repository.ItemRepository;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,14 +26,18 @@ public class ItemServiceTest {
 
     @Test
     public void shouldReturnItemList() {
-        when(itemRepository.findAll()).thenReturn(Arrays.asList(
-                new Item("item1", 1L),
-                new Item("item2", 2L)
-        ));
+        Item expectedItem1 = new Item("item1", 1L);
+        Item expectedItem2 = new Item("item2", 2L);
+        List<Item> expectedList = Arrays.asList(
+                expectedItem1,
+                expectedItem2
+        );
+        when(itemRepository.findAll()).thenReturn(expectedList);
 
-        List<Item> result = itemService.getItems();
+        List<Item> actualList = itemService.getItems();
 
-        assertEquals("item1", result.get(0).getMessage());
-        assertEquals("item2", result.get(1).getMessage());
+        assertThat(actualList)
+                .hasSize(2)
+                .containsExactly(expectedItem1, expectedItem2);
     }
 }
