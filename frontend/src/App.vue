@@ -27,7 +27,7 @@ onMounted(async () => {
         <button>Add Item</button>
       </div>
 
-      <div v-for="item in items" class="item item-highlight" data-cy="item">
+      <div v-for="item in items" :key="item.id" class="item item-highlight" data-cy="item">
         <span class="item-text">{{ item.message }}</span>
       </div>
     </div>
