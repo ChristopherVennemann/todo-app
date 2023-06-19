@@ -25,6 +25,7 @@ public class ItemController {
 
     @PostMapping("/items")
     public ResponseEntity<Item> saveItem(@RequestBody Item item) {
+        System.out.println("post received");
         return new ResponseEntity<>(itemService.saveItem(item), HttpStatus.CREATED);
     }
 }

@@ -1,21 +1,26 @@
 <script setup lang="ts">
-import axios, {AxiosResponse} from "axios";
+import axios, {AxiosResponse, HttpStatusCode} from "axios";
 import {onMounted, Ref, ref} from "vue";
 import Item from "@/types/Item";
 
 let items: Ref<Item[]> = ref([])
+let newItemMessage: String = ''
 
 async function getData(): Promise<Item[]> {
   const response: AxiosResponse = await axios.get('http://localhost:8082/items')
   return response.data
 }
 
-function addNewItem(): void {
-//   get input value
-  // send string to backend
-  // receive Item from backend
-  // clear input
-  // add Item to items
+async function addNewItem() {
+  const response = await axios.post(
+      'http://localhost:8082/items',
+      {"message": newItemMessage}
+  )
+
+  if (response.status === HttpStatusCode.Created) {
+    items.value.push(response.data);
+    newItemMessage = ''
+  }
 }
 
 onMounted(async () => {
@@ -31,8 +36,8 @@ onMounted(async () => {
   <div class="center-flex">
     <div class="item-list center-flex">
       <div class="item new-item center-flex">
-        <input type="text" placeholder="new item..."/>
-        <button>Add Item</button>
+        <input type="text" v-model="newItemMessage" placeholder="new item..."/>
+        <button @click="addNewItem">Add Item</button>
       </div>
 
       <div v-for="item in items" :key="item.id" class="item item-highlight" data-cy="item">
