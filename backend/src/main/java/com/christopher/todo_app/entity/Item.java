@@ -13,7 +13,6 @@ public class Item {
     @Column(name = "message", nullable = false)
     private String message;
 
-
     public String getMessage() {
         return message;
     }

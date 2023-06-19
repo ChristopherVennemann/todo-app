@@ -10,6 +10,14 @@ async function getData(): Promise<Item[]> {
   return response.data
 }
 
+function addNewItem(): void {
+//   get input value
+  // send string to backend
+  // receive Item from backend
+  // clear input
+  // add Item to items
+}
+
 onMounted(async () => {
   items.value = await getData()
 })
