@@ -1,4 +1,5 @@
-import App from './App.vue'
+// @ts-ignore
+import App from "../../App.vue";
 
 describe('<App />', () => {
   it('renders', () => {
