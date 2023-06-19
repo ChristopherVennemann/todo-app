@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import axios from "axios";
-import {onMounted, ref} from "vue";
+import axios, {AxiosResponse} from "axios";
+import {onMounted, Ref, ref} from "vue";
 
-let items = ref([])
+let items: Ref<[]> = ref([])
 
 async function getData() {
-  const response = await axios.get('http://localhost:8082/items')
+  const response: AxiosResponse = await axios.get('http://localhost:8082/items')
   return response.data
 }
 
