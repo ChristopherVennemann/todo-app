@@ -6,15 +6,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ItemController.class)
 public
@@ -33,11 +35,9 @@ class ItemControllerTest {
                 new Item("item 2", 2L),
                 new Item("item 3", 3L)
         );
+        when(itemService.getItems()).thenReturn(expectedList);
 
-        when(itemService.getItems()).thenReturn(
-                expectedList);
-
-        this.mockMvc.perform(get("/items"))
+        mockMvc.perform(get("/items"))
                 .andExpect(status().isOk())
 
                 .andExpect(jsonPath("$[0].message", is(expectedList.get(0).getMessage())))
@@ -48,5 +48,18 @@ class ItemControllerTest {
 
                 .andExpect(jsonPath("$[2].message", is(expectedList.get(2).getMessage())))
                 .andExpect(jsonPath("$[2].id", is(expectedList.get(2).getId()), Long.class));
+    }
+
+    @Test
+    public void shouldReturnSavedItem() throws Exception {
+        Item item = new Item("item 1", 1L);
+
+        when(itemService.saveItem(any())).thenReturn(item);
+
+        mockMvc.perform(post("/items")
+                .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"message\": \"item 1\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.message", is("item 1")));
     }
 }
