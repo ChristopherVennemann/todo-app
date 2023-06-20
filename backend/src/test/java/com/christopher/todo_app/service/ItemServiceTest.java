@@ -6,6 +6,7 @@ import com.christopher.todo_app.repository.ItemRepository;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.*;
 
@@ -39,5 +40,17 @@ public class ItemServiceTest {
         assertThat(actualList)
                 .hasSize(2)
                 .containsExactly(expectedItem1, expectedItem2);
+    }
+
+    @Test
+    public void shouldSaveItemAndReturnIt() throws Exception {
+        Item initialItem = new Item("item1", null);
+        Item expectedItem = new Item("item1", 1L);
+        when(itemRepository.save(any(Item.class))).thenReturn(expectedItem);
+
+        Item actualItem = itemService.saveItem(initialItem);
+
+        assertThat(actualItem)
+                .isEqualTo(expectedItem);
     }
 }
