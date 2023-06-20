@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -52,14 +53,16 @@ class ItemControllerTest {
 
     @Test
     public void shouldReturnSavedItem() throws Exception {
-        Item item = new Item("item 1", 1L);
+        String requestBody = "{\"message\": \"item 1\"}";
+        Item expectedItem = new Item("item 1", 1L);
 
-        when(itemService.saveItem(any())).thenReturn(item);
+        when(itemService.saveItem(any())).thenReturn(expectedItem);
 
         mockMvc.perform(post("/items")
-                .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"message\": \"item 1\"}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message", is("item 1")));
+                .andExpect(jsonPath("$.message", is(expectedItem.getMessage())))
+                .andExpect(jsonPath("$.id", is(expectedItem.getId()), Long.class));
     }
 }

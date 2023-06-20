@@ -2,6 +2,7 @@ package com.christopher.todo_app.controller;
 
 import com.christopher.todo_app.entity.Item;
 import com.christopher.todo_app.service.ItemService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class ItemController {
     }
 
     @PostMapping("/items")
-    public ResponseEntity<Item> saveItem(@RequestBody Item item) {
+    public ResponseEntity<Item> saveItem(@Valid @RequestBody Item item) {
         Item retrievedItem = itemService.saveItem(item);
         return new ResponseEntity<>(retrievedItem, HttpStatus.CREATED);
     }
