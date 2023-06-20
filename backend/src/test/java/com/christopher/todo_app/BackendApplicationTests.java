@@ -12,9 +12,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -52,7 +49,7 @@ class BackendApplicationTests {
 				.andExpect(jsonPath("$.id", is(expectedItem.getId()), Long.class));
 	}
 	@Test
-	public void shouldReturnStatusBedRequest400ForInvalidPost() throws Exception {
+	public void shouldReturnStatusBadRequest400ForInvalidPost() throws Exception {
 		String requestBody = "{\"message\": \"\"}";
 
 		RequestBuilder request = MockMvcRequestBuilders.post("/items")

@@ -65,4 +65,24 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$.message", is(expectedItem.getMessage())))
                 .andExpect(jsonPath("$.id", is(expectedItem.getId()), Long.class));
     }
+
+    @Test
+    public void shouldReturnBadRequestForEmptyMessage() throws Exception {
+        String requestBody = "{\"message\": \"\"}";
+
+        mockMvc.perform(post("/items")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturnBadRequestForEmptyRequest() throws Exception {
+        String requestBody = "{}";
+
+        mockMvc.perform(post("/items")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+    }
 }
