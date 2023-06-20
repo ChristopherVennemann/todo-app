@@ -15,8 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -39,7 +38,7 @@ class BackendApplicationTests {
 	}
 
 	@Test
-	public void shouldReturnStatusCreated201() throws Exception {
+	public void shouldReturnStatusCreated201ForValidPost() throws Exception {
 		String requestBody = "{\"message\": \"item 1\"}";
 		Item expectedItem = new Item("item 1", 1L);
 
@@ -52,4 +51,18 @@ class BackendApplicationTests {
 				.andExpect(jsonPath("$.message", is(expectedItem.getMessage())))
 				.andExpect(jsonPath("$.id", is(expectedItem.getId()), Long.class));
 	}
+	@Test
+	public void shouldReturnStatusBedRequest400ForInvalidPost() throws Exception {
+		String requestBody = "{\"message\": \"\"}";
+
+		RequestBuilder request = MockMvcRequestBuilders.post("/items")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(requestBody);
+
+		mockMvc.perform(request)
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$").doesNotExist());
+	}
+
+
 }
