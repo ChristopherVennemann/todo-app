@@ -1,6 +1,8 @@
 package com.christopher.todo_app.entity;
 
 import jakarta.persistence.*;
+import jakarta.annotation.Nonnull;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "item")
@@ -10,6 +12,8 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Nonnull
+    @NotBlank(message = "message must not be empty")
     @Column(name = "message", nullable = false)
     private String message;
 
