@@ -91,7 +91,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  justify-content: space-between;
+  //justify-content: space-between;
 }
 
 #title {
@@ -126,6 +126,8 @@ onMounted(async () => {
 #my-footer {
   width: 80%;
   display: flex;
+  position: absolute;
+  bottom: 0px;
   flex-direction: row;
   flex-wrap: nowrap;
   align-content: center;
