@@ -21,8 +21,8 @@ describe('<App />', () => {
     cy.get('input').type(expectedMessage)
     cy.get('button').click()
 
-    cy.wait('@postItem').should(({ request, response }) => {
-      expect(request.body.message).to.equal(expectedMessage)
+    cy.wait('@postItem').should((result) => {
+      expect(result.request.body.message).to.equal(expectedMessage)
     })
   })
 
