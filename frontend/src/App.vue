@@ -29,98 +29,85 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="title-wrapper center-flex" id="app-title">
-    <h1>TO-DO-LIST 2000</h1>
-  </div>
 
-  <div class="center-flex">
-    <div class="item-list center-flex">
-      <div class="item new-item center-flex">
-        <input type="text" v-model="newItemMessage" placeholder="new item..."/>
-        <button @click="addNewItem">Add Item</button>
-      </div>
+  <div id="wrapper">
 
-      <div v-for="item in items" :key="item.id" class="item item-highlight" data-cy="item">
-        <span class="item-text">{{ item.message }}</span>
+    <div class="vertical-center">
+      <div id="my-header">
+        <p>hier steht was</p>
+        <p>hier auch</p>
       </div>
     </div>
+
+
+    <div class="vertical-center">
+      <div id="my-content">
+        <p>hier steht was</p>
+        <p>hier auch</p>
+      </div>
+    </div>
+
+
+    <div class="vertical-center">
+      <div id="my-footer">
+        <p>hier steht was</p>
+        <p>hier auch</p>
+      </div>
+    </div>
+
   </div>
+
 </template>
+
 
 <style scoped>
 
-#app-title {
-  font-style: normal;
-  text-decoration: underline;
-  font-weight: bolder;
-  font-size: larger;
-  color: rgba(255,255,255,1);
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+.vertical-center {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
 }
 
-.center-flex {
+#wrapper {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  align-content: center;
-  justify-content: center;
-  align-items: center;
-}
-
-.title-wrapper {
-  flex-direction: row;
-}
-
-.item-list {
-  width: 80vw;
-}
-
-.item {
-  margin-top: 1em;
-  width: 80%;
-  padding: 0.25em;
-  border: 1px solid rgba(255,255,255,0);
-  border-radius: 0.4em;
-  -webkit-box-shadow: 2px 2px 6px 0 rgba(0,0,0,0.5);
-  box-shadow: 2px 2px 6px 0 rgba(0,0,0,0.5);
-  background-color: rgba(255,255,255,0.8);
-}
-
-.item-highlight:hover {
-  background-color: rgba(255,255,255,0.7);
-  border-color: white;
-  cursor: pointer;
-}
-
-.new-item {
-  flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 2em;
 }
 
-.item-text {
-  margin-left: 0.5em;
+
+#my-header {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: space-between;
+  align-items: baseline;
+
+
+  font-family: Poppins, Calibri, sans-serif;
+  font-style: normal;
+  font-size: larger;
+  color: rgba(255,255,255,0.8);
 }
 
-input {
-  width: 90%;
-  background-color: rgba(255, 255, 255, 0.7);
-  border: none;
-  outline: none;
-  border-bottom: 1px solid #ccc;
-  border-radius: 0.2em;
-  margin-left: 0.5em;
+#my-footer {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: space-around;
+  align-items: baseline;
 
+
+  font-family: Poppins, Calibri, sans-serif;
+  font-style: normal;
+  font-size: larger;
+  color: rgba(255,255,255,0.8);
 }
 
-button {
-  width: fit-content;
-  white-space: nowrap;
-  margin-left: 1em;
-  margin-right: 0.5em;
-}
-
-button:hover {
-  cursor: pointer;
-}
 </style>
