@@ -42,8 +42,15 @@ onMounted(async () => {
 
     <div class="vertical-center">
       <div id="my-content">
-        <p>hier steht was</p>
-        <p>hier auch</p>
+
+        <p id="title">to-do :</p>
+
+        <div class="item-box">
+          <p>hier steht was</p>
+        </div>
+        <div class="item-box">
+          <p>hier auch</p>
+        </div>
       </div>
     </div>
 
@@ -67,6 +74,16 @@ onMounted(async () => {
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
+  align-content: flex-start;
+}
+
+.item-box {
+  padding: 0.1em 1em;
+  margin-top: 0.5em;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 1em;
+
+  font-family: MyPoppins, Calibri, sans-serif;
 }
 
 #wrapper {
@@ -77,6 +94,14 @@ onMounted(async () => {
   justify-content: space-between;
 }
 
+#title {
+  margin: 0;
+
+  font-family: MyPoppins, Calibri, sans-serif;
+  font-size: xxx-large;
+  font-weight: bold;
+  color: rgba(255,255,255,0.5);
+}
 
 #my-header {
   width: 80%;
@@ -88,10 +113,14 @@ onMounted(async () => {
   align-items: baseline;
 
 
-  font-family: Poppins, Calibri, sans-serif;
+  font-family: MyPoppins, Calibri, sans-serif;
   font-style: normal;
   font-size: larger;
   color: rgba(255,255,255,0.8);
+}
+
+#my-content {
+  width: 60%;
 }
 
 #my-footer {
@@ -104,7 +133,7 @@ onMounted(async () => {
   align-items: baseline;
 
 
-  font-family: Poppins, Calibri, sans-serif;
+  font-family: MyPoppins, Calibri, sans-serif;
   font-style: normal;
   font-size: larger;
   color: rgba(255,255,255,0.8);
