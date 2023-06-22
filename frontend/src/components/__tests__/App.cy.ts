@@ -26,6 +26,7 @@ describe('<App />', () => {
     cy.get('#plus').click()
 
     cy.wait('@postItem').should((result) => {
+      // @ts-ignore
       expect(result.request.body.message).to.equal(expectedMessage)
     })
   })
@@ -39,7 +40,9 @@ describe('<App />', () => {
     cy.get('#plus').click()
 
     cy.get('[data-cy=item]').should(($items) => {
+      // @ts-ignore
       expect($items).to.have.length(1)
+      // @ts-ignore
       expect($items.eq(0)).to.contain(expectedItem.message)
     })
   })
