@@ -47,7 +47,7 @@ onMounted(async () => {
 
         <div>
           <div class="item-box row" id="new-item">
-            <input class="col" type="text" v-model="newItemMessage" placeholder="new item..." id="new-item-input"/>
+            <input class="col" type="text" v-model="newItemMessage" placeholder="new item..." id="new-message"/>
             <img class="col-3" @click="addNewItem" id="plus" src="@/images/plus_white.png" alt=""/>
           </div>
         </div>
@@ -138,14 +138,14 @@ onMounted(async () => {
   background-color: rgba(255,255,255,0.4);
 }
 
-#new-item-input {
+#new-message {
   width: auto;
   font-size: larger;
   background-color: rgba(255,255,255,0);
   border: none;
 }
 
-#new-item-input:focus {
+#new-message:focus {
   outline: none;
 }
 
