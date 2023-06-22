@@ -1,5 +1,6 @@
 package com.christopher.todo_app.service;
 
+import com.christopher.todo_app.dto.ItemResponse;
 import com.christopher.todo_app.entity.Item;
 import com.christopher.todo_app.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,12 @@ public class ItemService {
 
     @Autowired
     ItemRepository itemRepository;
-    public List<Item> getItems() {
-        return (List<Item>) itemRepository.findAll();
+
+    public List<ItemResponse> getItems() {
+        return ItemResponse.of((List<Item>) itemRepository.findAll());
     }
 
-    public Item saveItem(Item item) {
-        return itemRepository.save(item);
+    public ItemResponse saveItem(ItemResponse itemResponse) {
+        return ItemResponse.of(itemRepository.save(Item.of(itemResponse)));
     }
 }

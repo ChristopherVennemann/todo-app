@@ -1,6 +1,6 @@
 package com.christopher.todo_app;
 
-import com.christopher.todo_app.entity.Item;
+import com.christopher.todo_app.dto.ItemResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,7 +12,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -37,7 +38,7 @@ class BackendApplicationTests {
 	@Test
 	public void shouldReturnStatusCreated201ForValidPost() throws Exception {
 		String requestBody = "{\"message\": \"item 1\"}";
-		Item expectedItem = new Item("item 1", 1L);
+		ItemResponse expectedItem = new ItemResponse("item 1", 1L);
 
 		RequestBuilder request = MockMvcRequestBuilders.post("/items")
 				.contentType(MediaType.APPLICATION_JSON)

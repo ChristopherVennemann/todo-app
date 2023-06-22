@@ -1,6 +1,6 @@
 package com.christopher.todo_app.controller;
 
-import com.christopher.todo_app.entity.Item;
+import com.christopher.todo_app.dto.ItemResponse;
 import com.christopher.todo_app.service.ItemService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +13,11 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ItemController.class)
 public
@@ -31,10 +31,10 @@ class ItemControllerTest {
 
     @Test
     public void shouldReturnListOfAllItems() throws Exception{
-        List<Item> expectedList = List.of(
-                new Item("item 1", 1L),
-                new Item("item 2", 2L),
-                new Item("item 3", 3L)
+        List<ItemResponse> expectedList = List.of(
+                new ItemResponse("item 1", 1L),
+                new ItemResponse("item 2", 2L),
+                new ItemResponse("item 3", 3L)
         );
         when(itemService.getItems()).thenReturn(expectedList);
 
@@ -54,7 +54,7 @@ class ItemControllerTest {
     @Test
     public void shouldReturnSavedItem() throws Exception {
         String requestBody = "{\"message\": \"item 1\"}";
-        Item expectedItem = new Item("item 1", 1L);
+        ItemResponse expectedItem = new ItemResponse("item 1", 1L);
 
         when(itemService.saveItem(any())).thenReturn(expectedItem);
 
