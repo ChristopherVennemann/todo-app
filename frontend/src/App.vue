@@ -34,8 +34,8 @@ onMounted(async () => {
 
     <div class="vertical-center">
       <div id="my-header">
-        <p>hier steht was</p>
-        <p>hier auch</p>
+        <p></p>
+        <p></p>
       </div>
     </div>
 
@@ -48,14 +48,14 @@ onMounted(async () => {
         <div>
           <div class="item-box row" id="new-item">
             <input class="col" type="text" v-model="newItemMessage" placeholder="new item..." id="new-item-input"/>
-            <button class="col-3" @click="addNewItem">Add Item</button>
+            <img class="col-3" @click="addNewItem" id="plus" src="@/images/plus_white.png" alt=""/>
           </div>
         </div>
 
         <div id="item-list">
-          <div v-for="item in items" :key="item.id" class="item-box row align-self-center" data-cy="item">
+          <div v-for="item in items" :key="item.id" class="item-box row" data-cy="item">
             <p class="col align-self-center" id="message">{{ item.message }}</p>
-            <img class="col-2 align-self-center" src="@/images/circle_empty_white.png" id="checkmark">
+            <img class="col-2" src="@/images/circle_empty_white.png" alt="" id="checkmark">
           </div>
         </div>
       </div>
@@ -63,8 +63,8 @@ onMounted(async () => {
 
       <div class="vertical-center">
         <div id="my-footer">
-          <p>hier steht was</p>
-          <p>hier auch</p>
+          <p></p>
+          <p></p>
         </div>
       </div>
 
@@ -85,6 +85,7 @@ onMounted(async () => {
 }
 
 .item-box {
+
   height: 6em;
   padding: 1em 1em;
   margin-top: 0.5em;
@@ -107,10 +108,8 @@ onMounted(async () => {
 }
 
 #title {
-  margin-top: 1.5em;
-
   font-family: MyPoppins, Calibri, sans-serif;
-  font-size: xxx-large;
+  font-size: 5em;
   font-weight: bold;
   color: rgba(255,255,255,0.5);
 }
@@ -141,6 +140,7 @@ onMounted(async () => {
 
 #new-item-input {
   width: auto;
+  font-size: larger;
   background-color: rgba(255,255,255,0);
   border: none;
 }
@@ -153,8 +153,19 @@ onMounted(async () => {
   margin-top: 2em;
 }
 
+#plus {
+  height: 70px;
+  width: auto;
+  opacity: 0.6;
+}
+
+#plus:hover {
+  opacity: 0.9;
+}
+
+
 #message {
-  font-size: ;
+  font-size: larger;
   padding-left: 1em;
 }
 
@@ -164,11 +175,15 @@ onMounted(async () => {
   opacity: 0.5;
 }
 
+#checkmark:hover {
+  opacity: 0.8;
+}
+
 #my-footer {
   width: 80%;
   display: flex;
   position: absolute;
-  bottom: 0px;
+  bottom: 0;
   flex-direction: row;
   flex-wrap: nowrap;
   align-content: center;
