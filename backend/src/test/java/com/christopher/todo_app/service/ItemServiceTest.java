@@ -46,6 +46,7 @@ public class ItemServiceTest {
     public void shouldSaveItemAndReturnIt() throws Exception {
         Item initialItem = new Item("item1", null);
         Item expectedItem = new Item("item1", 1L);
+
         when(itemRepository.save(any(Item.class))).thenReturn(expectedItem);
 
         Item actualItem = itemService.saveItem(initialItem);

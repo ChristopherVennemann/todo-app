@@ -60,6 +60,4 @@ class BackendApplicationTests {
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$").doesNotExist());
 	}
-
-
 }

@@ -45,25 +45,32 @@ onMounted(async () => {
 
         <p id="title">to-do :</p>
 
-        <div class="item-box">
-          <p>hier steht was</p>
+        <div>
+          <div class="item-box row" id="new-item">
+            <input class="col" type="text" v-model="newItemMessage" placeholder="new item..." id="new-item-input"/>
+            <button class="col-3" @click="addNewItem">Add Item</button>
+          </div>
         </div>
-        <div class="item-box">
+
+        <div id="item-list">
+          <div v-for="item in items" :key="item.id" class="item-box row align-self-center" data-cy="item">
+            <p class="col align-self-center" id="message">{{ item.message }}</p>
+            <img class="col-2 align-self-center" src="@/images/circle_empty_white.png" id="checkmark">
+          </div>
+        </div>
+      </div>
+
+
+      <div class="vertical-center">
+        <div id="my-footer">
+          <p>hier steht was</p>
           <p>hier auch</p>
         </div>
       </div>
-    </div>
 
-
-    <div class="vertical-center">
-      <div id="my-footer">
-        <p>hier steht was</p>
-        <p>hier auch</p>
-      </div>
     </div>
 
   </div>
-
 </template>
 
 
@@ -78,12 +85,18 @@ onMounted(async () => {
 }
 
 .item-box {
-  padding: 0.1em 1em;
+  height: 6em;
+  padding: 1em 1em;
   margin-top: 0.5em;
   background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 1em;
+  border-radius: 0.7em;
 
   font-family: MyPoppins, Calibri, sans-serif;
+}
+
+.item-box:hover {
+  box-shadow: 1px 1px rgba(0,0,0,0.5);
+  background-color: rgba(255,255,255,0.4);
 }
 
 #wrapper {
@@ -91,11 +104,10 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  //justify-content: space-between;
 }
 
 #title {
-  margin: 0;
+  margin-top: 1.5em;
 
   font-family: MyPoppins, Calibri, sans-serif;
   font-size: xxx-large;
@@ -121,6 +133,35 @@ onMounted(async () => {
 
 #my-content {
   width: 60%;
+}
+
+#new-item {
+  background-color: rgba(255,255,255,0.4);
+}
+
+#new-item-input {
+  width: auto;
+  background-color: rgba(255,255,255,0);
+  border: none;
+}
+
+#new-item-input:focus {
+  outline: none;
+}
+
+#item-list {
+  margin-top: 2em;
+}
+
+#message {
+  font-size: ;
+  padding-left: 1em;
+}
+
+#checkmark {
+  height: 70px;
+  width: auto;
+  opacity: 0.5;
 }
 
 #my-footer {
