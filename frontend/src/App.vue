@@ -74,7 +74,7 @@ onMounted(async () => {
 </template>
 
 
-<style scoped>
+<style scoped lang="scss">
 
 .vertical-center {
   display: flex;
