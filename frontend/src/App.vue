@@ -47,15 +47,15 @@ onMounted(async () => {
 
         <div>
           <div class="item-box row" id="new-item">
-            <input class="col" type="text" v-model="newItemMessage" placeholder="new item..."/>
-            <img class="col-3" @click="addNewItem" src="@/images/plus_white.png" alt=""/>
+            <input class="col" type="text" v-model="newItemMessage" placeholder=". . . add new item"/>
+            <img class="col-3 align-self-center" @click="addNewItem" src="@/images/plus_white.png" alt=""/>
           </div>
         </div>
 
         <div id="item-list">
           <div v-for="item in items" :key="item.id" class="item-box row" data-cy="item">
-            <p class="col align-self-center">{{ item.message }}</p>
-            <img class="col-2" src="@/images/circle_empty_white.png" alt="">
+            <p class="col align-self-end">{{ item.message }}</p>
+            <img class="col-2 align-self-center" src="@/images/circle_empty_white.png" alt="">
           </div>
         </div>
       </div>
@@ -78,7 +78,12 @@ onMounted(async () => {
 $primary-color: #FFFFFF;
 $shadow-color: #000000;
 $font-stack: MyPoppins, Calibri, sans-serif;
-$font-items: 6rem, $font-stack;
+$font-items: 1.6rem $font-stack;
+$font-title: bold 7rem $font-stack;
+
+html {
+  font-size: 62.5%;
+}
 
 .vertical-center {
   display: flex;
@@ -89,18 +94,25 @@ $font-items: 6rem, $font-stack;
 }
 
 .item-box {
-  height: 6em;
-  padding: 1em 1em;
+  height: 3em;
+  padding: 0em 1em;
   margin-top: 0.5em;
   background-color: rgba($primary-color, 0.2);
-  border-radius: 0.7em;
-
+  border-radius: 0.5em;
   font: $font-items;
-}
+  &:hover {
+    box-shadow: 1px 1px rgba($shadow-color,0.5);
+    background-color: rgba($primary-color,0.4);
+  }
 
-.item-box:hover {
-  box-shadow: 1px 1px rgba($shadow-color,0.5);
-  background-color: rgba($primary-color,0.4);
+  img {
+    height: 60px;
+    width: auto;
+    opacity: 0.6;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
 }
 
 #center-wrapper {
@@ -111,22 +123,8 @@ $font-items: 6rem, $font-stack;
 }
 
 #title {
-  font-family: $font-stack;
-  font-weight: bold;
-  color: rgba($primary-color,0.5);
-}
-
-#my-header {
-  width: 80%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-content: center;
-  justify-content: space-between;
-  align-items: baseline;
-
-  font-family: $font-stack;
-  color: rgba($primary-color,0.8);
+  font: $font-title;
+  color: rgba($primary-color,0.6);
 }
 
 #my-content {
@@ -140,50 +138,20 @@ $font-items: 6rem, $font-stack;
     width: auto;
     background-color: rgba($primary-color,0);
     border: none;
-  }
-  input:focus {
-    outline: none;
-  }
-
-  img {
-    height: 70px;
-    width: auto;
-    opacity: 0.6;
-  }
-  img:hover {
-    opacity: 0.9;
+    &:focus {
+      outline: none;
+      &::placeholder {
+        opacity: 0;
+      }
+    }
   }
 }
 
 #item-list {
   margin-top: 2em;
   p {
-    padding-left: 1em;
+    padding-left: 0.5em;
   }
-
-  img {
-    height: 70px;
-    width: auto;
-    opacity: 0.5;
-  }
-  img:hover {
-    opacity: 0.8;
-  }
-}
-
-#my-footer {
-  width: 80%;
-  display: flex;
-  position: absolute;
-  bottom: 0;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-content: center;
-  justify-content: space-around;
-  align-items: baseline;
-
-  font-family: $font-stack;
-  color: rgba($primary-color,0.8);
 }
 
 </style>
