@@ -30,7 +30,7 @@ onMounted(async () => {
 
 <template>
 
-  <div id="wrapper">
+  <div id="center-wrapper">
 
     <div class="vertical-center">
       <div id="my-header">
@@ -47,19 +47,18 @@ onMounted(async () => {
 
         <div>
           <div class="item-box row" id="new-item">
-            <input class="col" type="text" v-model="newItemMessage" placeholder="new item..." id="new-message"/>
-            <img class="col-3" @click="addNewItem" id="plus" src="@/images/plus_white.png" alt=""/>
+            <input class="col" type="text" v-model="newItemMessage" placeholder="new item..."/>
+            <img class="col-3" @click="addNewItem" src="@/images/plus_white.png" alt=""/>
           </div>
         </div>
 
         <div id="item-list">
           <div v-for="item in items" :key="item.id" class="item-box row" data-cy="item">
-            <p class="col align-self-center" id="message">{{ item.message }}</p>
-            <img class="col-2" src="@/images/circle_empty_white.png" alt="" id="checkmark">
+            <p class="col align-self-center">{{ item.message }}</p>
+            <img class="col-2" src="@/images/circle_empty_white.png" alt="">
           </div>
         </div>
       </div>
-
 
       <div class="vertical-center">
         <div id="my-footer">
@@ -76,6 +75,11 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 
+$primary-color: #FFFFFF;
+$shadow-color: #000000;
+$font-stack: MyPoppins, Calibri, sans-serif;
+$font-items: 6rem, $font-stack;
+
 .vertical-center {
   display: flex;
   flex-direction: row;
@@ -85,22 +89,21 @@ onMounted(async () => {
 }
 
 .item-box {
-
   height: 6em;
   padding: 1em 1em;
   margin-top: 0.5em;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba($primary-color, 0.2);
   border-radius: 0.7em;
 
-  font-family: MyPoppins, Calibri, sans-serif;
+  font: $font-items;
 }
 
 .item-box:hover {
-  box-shadow: 1px 1px rgba(0,0,0,0.5);
-  background-color: rgba(255,255,255,0.4);
+  box-shadow: 1px 1px rgba($shadow-color,0.5);
+  background-color: rgba($primary-color,0.4);
 }
 
-#wrapper {
+#center-wrapper {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -108,10 +111,9 @@ onMounted(async () => {
 }
 
 #title {
-  font-family: MyPoppins, Calibri, sans-serif;
-  font-size: 5em;
+  font-family: $font-stack;
   font-weight: bold;
-  color: rgba(255,255,255,0.5);
+  color: rgba($primary-color,0.5);
 }
 
 #my-header {
@@ -123,11 +125,8 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: baseline;
 
-
-  font-family: MyPoppins, Calibri, sans-serif;
-  font-style: normal;
-  font-size: larger;
-  color: rgba(255,255,255,0.8);
+  font-family: $font-stack;
+  color: rgba($primary-color,0.8);
 }
 
 #my-content {
@@ -135,48 +134,41 @@ onMounted(async () => {
 }
 
 #new-item {
-  background-color: rgba(255,255,255,0.4);
-}
+  background-color: rgba($primary-color,0.4);
 
-#new-message {
-  width: auto;
-  font-size: larger;
-  background-color: rgba(255,255,255,0);
-  border: none;
-}
+  input {
+    width: auto;
+    background-color: rgba($primary-color,0);
+    border: none;
+  }
+  input:focus {
+    outline: none;
+  }
 
-#new-message:focus {
-  outline: none;
+  img {
+    height: 70px;
+    width: auto;
+    opacity: 0.6;
+  }
+  img:hover {
+    opacity: 0.9;
+  }
 }
 
 #item-list {
   margin-top: 2em;
-}
+  p {
+    padding-left: 1em;
+  }
 
-#plus {
-  height: 70px;
-  width: auto;
-  opacity: 0.6;
-}
-
-#plus:hover {
-  opacity: 0.9;
-}
-
-
-#message {
-  font-size: larger;
-  padding-left: 1em;
-}
-
-#checkmark {
-  height: 70px;
-  width: auto;
-  opacity: 0.5;
-}
-
-#checkmark:hover {
-  opacity: 0.8;
+  img {
+    height: 70px;
+    width: auto;
+    opacity: 0.5;
+  }
+  img:hover {
+    opacity: 0.8;
+  }
 }
 
 #my-footer {
@@ -190,11 +182,8 @@ onMounted(async () => {
   justify-content: space-around;
   align-items: baseline;
 
-
-  font-family: MyPoppins, Calibri, sans-serif;
-  font-style: normal;
-  font-size: larger;
-  color: rgba(255,255,255,0.8);
+  font-family: $font-stack;
+  color: rgba($primary-color,0.8);
 }
 
 </style>
