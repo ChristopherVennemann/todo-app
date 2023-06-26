@@ -11,12 +11,13 @@ import java.util.List;
 public class ItemService {
 
     @Autowired
-    ItemRepository itemRepository;
+    private ItemRepository itemRepository;
+
     public List<Item> getItems() {
         return (List<Item>) itemRepository.findAll();
     }
 
-    public Item saveItem(Item item) {
+    public Item saveItem(final Item item) {
         return itemRepository.save(item);
     }
 }

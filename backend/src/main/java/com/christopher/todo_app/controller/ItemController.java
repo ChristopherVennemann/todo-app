@@ -12,19 +12,19 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping
+@RequestMapping("/items")
 public class ItemController {
 
     @Autowired
-    ItemService itemService;
+    private ItemService itemService;
 
-    @GetMapping("/items")
-    public ResponseEntity<List<Item>> getItems() {
-        List<Item> items = itemService.getItems();
-        return new ResponseEntity<>(items, HttpStatus.OK);
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<Item> getItems() {
+        return itemService.getItems();
     }
 
-    @PostMapping("/items")
+    @PostMapping
     public ResponseEntity<Item> saveItem(@Valid @RequestBody Item item) {
         Item retrievedItem = itemService.saveItem(item);
         return new ResponseEntity<>(retrievedItem, HttpStatus.CREATED);
