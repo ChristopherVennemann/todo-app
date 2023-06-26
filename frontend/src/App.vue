@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import axios, {AxiosResponse, HttpStatusCode} from "axios";
 import {onMounted, Ref, ref} from "vue";
 import Item from "@/types/Item";
@@ -33,37 +33,22 @@ onMounted(async () => {
   <div id="center-wrapper">
 
     <div class="vertical-center">
-      <div id="my-header">
-        <p></p>
-        <p></p>
-      </div>
-    </div>
-
-
-    <div class="vertical-center">
       <div id="my-content">
 
         <p id="title">to-do :</p>
 
         <div>
-          <div class="item-box row" id="new-item">
-            <input class="col" type="text" v-model="newItemMessage" placeholder=". . . add new item"/>
-            <img class="col-3 align-self-center" @click="addNewItem" src="@/images/plus_white.png" alt=""/>
+          <div id="new-item" class="item-box row">
+            <input v-model="newItemMessage" class="col" placeholder=". . . add new item" type="text"/>
+            <img alt="" class="col-3 align-self-center" src="@/images/plus_white.png" @click="addNewItem"/>
           </div>
         </div>
 
         <div id="item-list">
           <div v-for="item in items" :key="item.id" class="item-box row" data-cy="item">
             <p class="col align-self-end">{{ item.message }}</p>
-            <img class="col-2 align-self-center" src="@/images/circle_empty_white.png" alt="">
+            <img alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png">
           </div>
-        </div>
-      </div>
-
-      <div class="vertical-center">
-        <div id="my-footer">
-          <p></p>
-          <p></p>
         </div>
       </div>
 
@@ -73,7 +58,7 @@ onMounted(async () => {
 </template>
 
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 
 $primary-color: #FFFFFF;
 $shadow-color: #000000;
@@ -100,15 +85,17 @@ html {
   background-color: rgba($primary-color, 0.2);
   border-radius: 0.5em;
   font: $font-items;
+
   &:hover {
-    box-shadow: 1px 1px rgba($shadow-color,0.5);
-    background-color: rgba($primary-color,0.4);
+    box-shadow: 1px 1px rgba($shadow-color, 0.5);
+    background-color: rgba($primary-color, 0.4);
   }
 
   img {
     height: 60px;
     width: auto;
     opacity: 0.6;
+
     &:hover {
       opacity: 0.8;
     }
@@ -124,7 +111,7 @@ html {
 
 #title {
   font: $font-title;
-  color: rgba($primary-color,0.6);
+  color: rgba($primary-color, 0.6);
 }
 
 #my-content {
@@ -132,14 +119,16 @@ html {
 }
 
 #new-item {
-  background-color: rgba($primary-color,0.4);
+  background-color: rgba($primary-color, 0.4);
 
   input {
     width: auto;
-    background-color: rgba($primary-color,0);
+    background-color: rgba($primary-color, 0);
     border: none;
+
     &:focus {
       outline: none;
+
       &::placeholder {
         opacity: 0;
       }
@@ -149,6 +138,7 @@ html {
 
 #item-list {
   margin-top: 2em;
+
   p {
     padding-left: 0.5em;
   }
