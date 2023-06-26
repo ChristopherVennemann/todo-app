@@ -111,6 +111,7 @@ html {
     opacity: 0.6;
     &:hover {
       opacity: 0.8;
+      cursor: pointer;
     }
   }
 }
