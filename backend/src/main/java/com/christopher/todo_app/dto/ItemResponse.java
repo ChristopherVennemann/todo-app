@@ -20,9 +20,6 @@ public class ItemResponse {
         this.id = id;
     }
 
-    public ItemResponse() {
-    }
-
     public static ItemResponse of(Item item) {
         return new ItemResponse(item.getMessage(), item.getId());
     }
@@ -37,15 +34,7 @@ public class ItemResponse {
         return id;
     }
 
-    public void setId(final Long id) {
-        this.id = id;
-    }
-
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(final String message) {
-        this.message = message;
     }
 }

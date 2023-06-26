@@ -1,25 +1,25 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import axios, {AxiosResponse, HttpStatusCode} from "axios";
 import {onMounted, Ref, ref} from "vue";
 import Item from "@/types/Item";
 
-let items: Ref<Item[]> = ref([])
-let newItemMessage: String = ''
+const items: Ref<Item[]> = ref([]);
+let newItemMessage: String = '';
 
 async function getData(): Promise<Item[]> {
-  const response: AxiosResponse = await axios.get('http://localhost:8082/items')
-  return response.data
+  const response: AxiosResponse = await axios.get('http://localhost:8082/items');
+  return response.data;
 }
 
-async function addNewItem() {
+async function addNewItem(): Promise<void> {
   const response = await axios.post(
       'http://localhost:8082/items',
       {"message": newItemMessage}
-  )
+  );
 
   if (response.status === HttpStatusCode.Created) {
     items.value.push(response.data);
-    newItemMessage = ''
+    newItemMessage = '';
   }
 }
 
@@ -29,14 +29,14 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="title-wrapper center-flex" id="app-title">
+  <div id="app-title" class="title-wrapper center-flex">
     <h1>TO-DO-LIST 2000</h1>
   </div>
 
   <div class="center-flex">
     <div class="item-list center-flex">
       <div class="item new-item center-flex">
-        <input type="text" v-model="newItemMessage" placeholder="new item..."/>
+        <input v-model="newItemMessage" placeholder="new item..." type="text"/>
         <button @click="addNewItem">Add Item</button>
       </div>
 
@@ -54,7 +54,7 @@ onMounted(async () => {
   text-decoration: underline;
   font-weight: bolder;
   font-size: larger;
-  color: rgba(255,255,255,1);
+  color: rgba(255, 255, 255, 1);
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
@@ -79,15 +79,15 @@ onMounted(async () => {
   margin-top: 1em;
   width: 80%;
   padding: 0.25em;
-  border: 1px solid rgba(255,255,255,0);
+  border: 1px solid rgba(255, 255, 255, 0);
   border-radius: 0.4em;
-  -webkit-box-shadow: 2px 2px 6px 0 rgba(0,0,0,0.5);
-  box-shadow: 2px 2px 6px 0 rgba(0,0,0,0.5);
-  background-color: rgba(255,255,255,0.8);
+  -webkit-box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.5);
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 .item-highlight:hover {
-  background-color: rgba(255,255,255,0.7);
+  background-color: rgba(255, 255, 255, 0.7);
   border-color: white;
   cursor: pointer;
 }
