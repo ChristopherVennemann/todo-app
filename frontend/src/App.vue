@@ -4,7 +4,7 @@ import {onMounted, Ref, ref} from "vue";
 import Item from "@/types/Item";
 
 let items: Ref<Item[]> = ref([])
-let newItemMessage: String = ''
+let newItemMessage: string = ''
 
 async function getData(): Promise<Item[]> {
   const response: AxiosResponse = await axios.get('http://localhost:8082/items')
@@ -30,26 +30,21 @@ onMounted(async () => {
 
 <template>
 
-  <div id="center-wrapper">
+  <div id="app-container">
 
-    <div class="vertical-center">
-      <div id="my-content">
+    <p id="title">to-do :</p>
 
-        <p id="title">to-do :</p>
+    <div>
+      <div id="new-item" class="item-box row">
+        <input v-model="newItemMessage" class="col" placeholder=". . . add new item" type="text"/>
+        <img alt="" class="col-3 align-self-center" src="@/images/plus_white.png" @click="addNewItem"/>
+      </div>
+    </div>
 
-        <div>
-          <div id="new-item" class="item-box row">
-            <input v-model="newItemMessage" class="col" placeholder=". . . add new item" type="text"/>
-            <img alt="" class="col-3 align-self-center" src="@/images/plus_white.png" @click="addNewItem"/>
-          </div>
-        </div>
-
-        <div id="item-list">
-          <div v-for="item in items" :key="item.id" class="item-box row" data-cy="item">
-            <p class="col align-self-end">{{ item.message }}</p>
-            <img alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png">
-          </div>
-        </div>
+    <div id="item-list">
+      <div v-for="item in items" :key="item.id" class="item-box row" data-cy="item">
+        <p class="col align-self-end">{{ item.message }}</p>
+        <img alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png">
       </div>
 
     </div>
@@ -70,18 +65,9 @@ html {
   font-size: 62.5%;
 }
 
-.vertical-center {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-content: flex-start;
-}
-
 .item-box {
   height: 3em;
-  padding: 0em 1em;
-  margin-top: 0.5em;
+  padding: 0 1em;
   background-color: rgba($primary-color, 0.2);
   border-radius: 0.5em;
   font: $font-items;
@@ -102,20 +88,17 @@ html {
   }
 }
 
-#center-wrapper {
-  min-height: 100vh;
+#app-container {
+  padding-left: 15%;
+  padding-right: 15%;
+  padding-top: 50px;
   display: flex;
   flex-direction: column;
-  flex-wrap: nowrap;
 }
 
 #title {
   font: $font-title;
   color: rgba($primary-color, 0.6);
-}
-
-#my-content {
-  width: 60%;
 }
 
 #new-item {
@@ -138,6 +121,9 @@ html {
 
 #item-list {
   margin-top: 2em;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.5em;
 
   p {
     padding-left: 0.5em;
