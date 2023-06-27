@@ -12,13 +12,13 @@ import java.util.List;
 public class ItemService {
 
     @Autowired
-    ItemRepository itemRepository;
+    private ItemRepository itemRepository;
 
     public List<ItemResponse> getItems() {
         return ItemResponse.of((List<Item>) itemRepository.findAll());
     }
 
-    public ItemResponse saveItem(ItemResponse itemResponse) {
+    public ItemResponse saveItem(final ItemResponse itemResponse) {
         return ItemResponse.of(itemRepository.save(Item.of(itemResponse)));
     }
 }

@@ -1,10 +1,10 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import axios, {AxiosResponse, HttpStatusCode} from "axios";
 import {onMounted, Ref, ref} from "vue";
 import Item from "@/types/Item";
 
 let items: Ref<Item[]> = ref([])
-let newItemMessage: String = ''
+let newItemMessage: string = ''
 
 async function getData(): Promise<Item[]> {
   const response: AxiosResponse = await axios.get('http://localhost:8082/items')
@@ -30,41 +30,21 @@ onMounted(async () => {
 
 <template>
 
-  <div id="center-wrapper">
+  <div id="app-container">
 
-    <div class="vertical-center">
-      <div id="my-header">
-        <p></p>
-        <p></p>
+    <p id="title">to-do :</p>
+
+    <div>
+      <div id="new-item" class="item-box row">
+        <input v-model="newItemMessage" class="col" placeholder=". . . add new item" type="text"/>
+        <img alt="" class="col-3 align-self-center" src="@/images/plus_white.png" @click="addNewItem"/>
       </div>
     </div>
 
-
-    <div class="vertical-center">
-      <div id="my-content">
-
-        <p id="title">to-do :</p>
-
-        <div>
-          <div class="item-box row" id="new-item">
-            <input class="col" type="text" v-model="newItemMessage" placeholder=". . . add new item" id="new-message"/>
-            <img class="col-3 align-self-center" @click="addNewItem" src="@/images/plus_white.png" alt="" id="plus"/>
-          </div>
-        </div>
-
-        <div id="item-list">
-          <div v-for="item in items" :key="item.id" class="item-box row" data-cy="item">
-            <p class="col align-self-end">{{ item.message }}</p>
-            <img class="col-2 align-self-center" src="@/images/circle_empty_white.png" alt="">
-          </div>
-        </div>
-      </div>
-
-      <div class="vertical-center">
-        <div id="my-footer">
-          <p></p>
-          <p></p>
-        </div>
+    <div id="item-list">
+      <div v-for="item in items" :key="item.id" class="item-box row" data-cy="item">
+        <p class="col align-self-end">{{ item.message }}</p>
+        <img alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png">
       </div>
 
     </div>
@@ -73,7 +53,7 @@ onMounted(async () => {
 </template>
 
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 
 $primary-color: #FFFFFF;
 $shadow-color: #000000;
@@ -85,30 +65,23 @@ html {
   font-size: 62.5%;
 }
 
-.vertical-center {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-content: flex-start;
-}
-
 .item-box {
   height: 3em;
-  padding: 0em 1em;
-  margin-top: 0.5em;
+  padding: 0 1em;
   background-color: rgba($primary-color, 0.2);
   border-radius: 0.5em;
   font: $font-items;
+
   &:hover {
-    box-shadow: 1px 1px rgba($shadow-color,0.5);
-    background-color: rgba($primary-color,0.4);
+    box-shadow: 1px 1px rgba($shadow-color, 0.5);
+    background-color: rgba($primary-color, 0.4);
   }
 
   img {
     height: 60px;
     width: auto;
     opacity: 0.6;
+
     &:hover {
       opacity: 0.8;
       cursor: pointer;
@@ -116,31 +89,30 @@ html {
   }
 }
 
-#center-wrapper {
-  min-height: 100vh;
+#app-container {
+  padding-left: 15%;
+  padding-right: 15%;
+  padding-top: 50px;
   display: flex;
   flex-direction: column;
-  flex-wrap: nowrap;
 }
 
 #title {
   font: $font-title;
-  color: rgba($primary-color,0.6);
-}
-
-#my-content {
-  width: 60%;
+  color: rgba($primary-color, 0.6);
 }
 
 #new-item {
-  background-color: rgba($primary-color,0.4);
+  background-color: rgba($primary-color, 0.4);
 
   input {
     width: auto;
-    background-color: rgba($primary-color,0);
+    background-color: rgba($primary-color, 0);
     border: none;
+
     &:focus {
       outline: none;
+
       &::placeholder {
         opacity: 0;
       }
@@ -150,6 +122,10 @@ html {
 
 #item-list {
   margin-top: 2em;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.5em;
+
   p {
     padding-left: 0.5em;
   }
