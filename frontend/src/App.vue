@@ -36,8 +36,8 @@ onMounted(async () => {
 
     <div>
       <div id="new-item" class="item-box row">
-        <input v-model="newItemMessage" class="col" placeholder=". . . add new item" type="text"/>
-        <img alt="" class="col-3 align-self-center" src="@/images/plus_white.png" @click="addNewItem"/>
+        <input id="new-message" v-model="newItemMessage" class="col" placeholder=". . . add new item" type="text"/>
+        <img id="plus" alt="" class="col-3 align-self-center" src="@/images/plus_white.png" @click="addNewItem"/>
       </div>
     </div>
 
