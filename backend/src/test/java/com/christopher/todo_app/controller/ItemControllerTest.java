@@ -32,11 +32,11 @@ class ItemControllerTest {
 
     @Test
     @DisplayName("GET /items - returns OK and list of all items")
-    void getItemsShouldReturnListOfAllItems() throws Exception{
+    void getItemsShouldReturnListOfAllItems() throws Exception {
         final List<ItemResponse> expectedList = List.of(
-                new ItemResponse("item 1", 1L),
-                new ItemResponse("item 2", 2L),
-                new ItemResponse("item 3", 3L)
+            new ItemResponse(1L, "item 1"),
+            new ItemResponse(2L, "item 2"),
+            new ItemResponse(3L, "item 3")
         );
         when(itemService.getItems()).thenReturn(expectedList);
 
@@ -59,7 +59,7 @@ class ItemControllerTest {
             {
                 "message": "item 1"
             }""";
-        final ItemResponse expectedItem = new ItemResponse("item 1", 1L);
+        final ItemResponse expectedItem = new ItemResponse(1L, "item 1");
 
         when(itemService.saveItem(any()))
             .thenReturn(expectedItem);
@@ -87,13 +87,12 @@ class ItemControllerTest {
     }
 
     @Test
-    @DisplayName("POST /items - should return BAD_REQUEST for empty request")
-    void postItemsShouldReturnBadRequestForEmptyRequest() throws Exception {
-        final String emptyRequestBody = "{}";
+    void shouldReturnBadRequestForEmptyRequest() throws Exception {
+        final String requestBody = "{}";
 
         mockMvc.perform(post("/items")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(emptyRequestBody))
+                .content(requestBody))
             .andExpect(status().isBadRequest());
     }
 }

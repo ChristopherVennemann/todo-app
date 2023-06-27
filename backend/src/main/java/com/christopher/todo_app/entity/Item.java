@@ -1,51 +1,31 @@
 package com.christopher.todo_app.entity;
 
 import com.christopher.todo_app.dto.ItemResponse;
-import jakarta.persistence.*;
 import jakarta.annotation.Nonnull;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "item")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Item {
-
-    public static Item of(ItemResponse itemResponse) {
-        Item item = new Item();
-        item.setMessage(itemResponse.getMessage());
-        item.setId(itemResponse.getId());
-        return item;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long id;
 
     @Nonnull
     @NotBlank(message = "message must not be empty")
     @Column(name = "message", nullable = false)
+    @Getter
     private String message;
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Item(String message, Long id) {
-        this.message = message;
-        this.id = id;
-    }
-
-    public Item() {
+    public static Item of(ItemResponse itemResponse) {
+        return new Item(itemResponse.getId(), itemResponse.getMessage());
     }
 }

@@ -12,6 +12,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping("/items")
+
 public class ItemController {
 
     @Autowired
@@ -24,6 +25,7 @@ public class ItemController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ItemResponse saveItem(@Valid @RequestBody ItemResponse item) {
         return itemService.saveItem(item);
     }

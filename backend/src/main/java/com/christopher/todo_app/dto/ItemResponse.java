@@ -4,37 +4,31 @@ package com.christopher.todo_app.dto;
 import com.christopher.todo_app.entity.Item;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class ItemResponse {
 
+    @Getter
     private Long id;
 
     @Nonnull
     @NotBlank(message = "message must not be empty")
+    @Getter
     private String message;
 
-    public ItemResponse(String message, Long id) {
-        this.message = message;
-        this.id = id;
-    }
-
     public static ItemResponse of(Item item) {
-        return new ItemResponse(item.getMessage(), item.getId());
+        return new ItemResponse(item.getId(), item.getMessage());
     }
 
     public static List<ItemResponse> of(List<Item> items) {
         return items.stream()
-            .map(item -> new ItemResponse(item.getMessage(), item.getId()))
+            .map(item -> new ItemResponse(item.getId(), item.getMessage()))
             .toList();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getMessage() {
-        return message;
     }
 }
