@@ -26,7 +26,7 @@ public class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemResponse saveItem(@Valid @RequestBody ItemResponse item) {
-        return itemService.saveItem(item);
+    public ItemResponse saveItem(@Valid @RequestBody ItemResponse itemResponse) {
+        return itemService.saveItem(itemResponse);
     }
 }

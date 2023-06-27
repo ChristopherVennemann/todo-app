@@ -1,6 +1,7 @@
 package com.christopher.todo_app;
 
 import com.christopher.todo_app.dto.ItemResponse;
+import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,46 +20,55 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class BackendApplicationTests {
 
-	@Autowired
-	private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-	@Test
-	void contextLoads() {
-		assertNotNull(mockMvc);
-	}
+    @Test
+    void contextLoads() {
+        assertNotNull(mockMvc);
+    }
 
-	@Test
-	public void shouldReturnStatusOk200() throws Exception {
-		RequestBuilder request = MockMvcRequestBuilders.get("/items");
+    @Test
+    void shouldReturnStatusOk200() throws Exception {
+        RequestBuilder request = MockMvcRequestBuilders.get("/items");
 
-		mockMvc.perform(request)
-				.andExpect(status().isOk());
-	}
+        mockMvc.perform(request)
+            .andExpect(status().isOk());
+    }
 
-	@Test
-	public void shouldReturnStatusCreated201ForValidPost() throws Exception {
-		String requestBody = "{\"message\": \"item 1\"}";
-		ItemResponse expectedItem = new ItemResponse("item 1", 1L);
+    @Test
+    void shouldReturnStatusCreated201ForValidPost() throws Exception {
+        @Language("json") final String requestBody = """
+            {
+                "message": "item 1"
+            }""";
+        final ItemResponse expectedItem = new ItemResponse(1L, "item 1");
 
-		RequestBuilder request = MockMvcRequestBuilders.post("/items")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(requestBody);
+        RequestBuilder request = MockMvcRequestBuilders
+            .post("/items")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody);
 
-		mockMvc.perform(request)
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.message", is(expectedItem.getMessage())))
-				.andExpect(jsonPath("$.id", is(expectedItem.getId()), Long.class));
-	}
-	@Test
-	public void shouldReturnStatusBadRequest400ForInvalidPost() throws Exception {
-		String requestBody = "{\"message\": \"\"}";
+        mockMvc.perform(request)
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.message", is(expectedItem.getMessage())))
+            .andExpect(jsonPath("$.id", is(expectedItem.getId()), Long.class));
+    }
 
-		RequestBuilder request = MockMvcRequestBuilders.post("/items")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(requestBody);
+    @Test
+    void shouldReturnStatusBadRequest400ForInvalidPost() throws Exception {
+        @Language("json") final String requestBody = """
+            {
+                "message": ""
+            }""";
 
-		mockMvc.perform(request)
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$").doesNotExist());
-	}
+        RequestBuilder request = MockMvcRequestBuilders
+            .post("/items")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody);
+
+        mockMvc.perform(request)
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$").doesNotExist());
+    }
 }

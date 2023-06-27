@@ -35,7 +35,7 @@ public class ItemServiceTest {
         );
         when(itemRepository.findAll()).thenReturn(expectedList);
 
-        final List<ItemResponse> actualList = itemService.getItems();
+        List<ItemResponse> actualList = itemService.getItems();
 
         assertThat(actualList)
             .hasSize(2)
