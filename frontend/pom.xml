@@ -29,9 +29,6 @@
                         <goals>
                             <goal>install-node-and-npm</goal>
                         </goals>
-                        <configuration>
-                            <nodeVersion>v16.0.0</nodeVersion>
-                        </configuration>
                     </execution>
                     <!-- Install all project dependencies -->
                     <execution>
@@ -67,20 +64,11 @@
                             <arguments>run test:unit</arguments>
                         </configuration>
                     </execution>
-                    <!-- Run End2End tests with Nightwatch -->
-                    <!--
-                    <execution>
-                    <id>npm run test:e2e</id>
-                    <goals>
-                      <goal>npm</goal>
-                    </goals>
-                    <phase>test</phase>
-                    <configuration>
-                        <arguments>run test:e2e</arguments>
-                    </configuration>
-                    </execution>
-                    -->
                 </executions>
+                <configuration>
+                    <npmVersion>9.5.1</npmVersion>
+                    <nodeVersion>v18.16.1</nodeVersion>
+                </configuration>
             </plugin>
         </plugins>
     </build>
