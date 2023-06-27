@@ -1,5 +1,6 @@
 package com.christopher.todo_app.entity;
 
+import com.christopher.todo_app.dto.ItemResponse;
 import jakarta.persistence.*;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.NotBlank;
@@ -7,6 +8,13 @@ import jakarta.validation.constraints.NotBlank;
 @Entity
 @Table(name = "item")
 public class Item {
+
+    public static Item of(ItemResponse itemResponse) {
+        Item item = new Item();
+        item.setMessage(itemResponse.getMessage());
+        item.setId(itemResponse.getId());
+        return item;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

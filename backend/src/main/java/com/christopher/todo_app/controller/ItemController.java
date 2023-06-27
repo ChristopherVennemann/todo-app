@@ -1,6 +1,6 @@
 package com.christopher.todo_app.controller;
 
-import com.christopher.todo_app.entity.Item;
+import com.christopher.todo_app.dto.ItemResponse;
 import com.christopher.todo_app.service.ItemService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +19,14 @@ public class ItemController {
     ItemService itemService;
 
     @GetMapping("/items")
-    public ResponseEntity<List<Item>> getItems() {
-        List<Item> items = itemService.getItems();
+    public ResponseEntity<List<ItemResponse>> getItems() {
+        List<ItemResponse> items = itemService.getItems();
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
 
     @PostMapping("/items")
-    public ResponseEntity<Item> saveItem(@Valid @RequestBody Item item) {
-        Item retrievedItem = itemService.saveItem(item);
-        return new ResponseEntity<>(retrievedItem, HttpStatus.CREATED);
+    public ResponseEntity<ItemResponse> saveItem(@Valid @RequestBody ItemResponse itemResponse) {
+        ItemResponse retrieved = itemService.saveItem(itemResponse);
+        return new ResponseEntity<>(retrieved, HttpStatus.CREATED);
     }
 }
