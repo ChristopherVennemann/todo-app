@@ -47,7 +47,7 @@ public class ItemServiceTest {
 
     @Test
     @DisplayName("Should save an Item and return it")
-    public void shouldSaveItemAndReturnIt() throws Exception {
+    public void shouldSaveItemAndReturnIt() {
         final ItemResponse initialItem = new ItemResponse(null, "item1");
         final ItemResponse expectedItem = new ItemResponse(1L, "item1");
         when(itemRepository.save(any(Item.class))).thenReturn(Item.of(expectedItem));
@@ -63,7 +63,6 @@ public class ItemServiceTest {
     @DisplayName("Should return WAS_DELETED if Id exists")
     public void shouldReturnWAS_DELETEDIfIdExists() {
         final long deleteId = 1L;
-
         when(itemRepository.existsById(1L)).thenReturn(true);
 
         final boolean wasSuccessful = itemService.deleteItem(deleteId);
