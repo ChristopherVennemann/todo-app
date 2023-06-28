@@ -28,7 +28,7 @@ public class ItemServiceTest {
 
     @Test
     @DisplayName("Should return list of all Items")
-    void shouldReturnItemList() {
+    public void shouldReturnItemList() {
         final Item expectedItem1 = new Item(1L, "item1");
         final Item expectedItem2 = new Item(2L, "item2");
         final List<Item> expectedList = Arrays.asList(
@@ -47,7 +47,7 @@ public class ItemServiceTest {
 
     @Test
     @DisplayName("Should save an Item and return it")
-    void shouldSaveItemAndReturnIt() throws Exception {
+    public void shouldSaveItemAndReturnIt() throws Exception {
         final ItemResponse initialItem = new ItemResponse(null, "item1");
         final ItemResponse expectedItem = new ItemResponse(1L, "item1");
         when(itemRepository.save(any(Item.class))).thenReturn(Item.of(expectedItem));
@@ -57,5 +57,28 @@ public class ItemServiceTest {
         assertThat(actualItem)
             .usingRecursiveComparison()
             .isEqualTo(expectedItem);
+    }
+
+    @Test
+    @DisplayName("Should return WAS_DELETED if Id exists")
+    public void shouldReturnWAS_DELETEDIfIdExists() {
+        final long deleteId = 1L;
+
+        when(itemRepository.existsById(1L)).thenReturn(true);
+
+        final boolean wasSuccessful = itemService.deleteItem(deleteId);
+
+        assertThat(wasSuccessful).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should return WAS_NOT_DELETED if Id does not exists")
+    public void shouldReturnWAS_NOT_DELETEDIfIdDoesntExist() {
+        final long deleteId = 2L;
+        when(itemRepository.existsById(2L)).thenReturn(false);
+
+        final boolean wasSuccessful = itemService.deleteItem(deleteId);
+
+        assertThat(wasSuccessful).isFalse();
     }
 }
