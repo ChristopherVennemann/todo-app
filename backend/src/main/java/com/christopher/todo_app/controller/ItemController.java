@@ -5,6 +5,7 @@ import com.christopher.todo_app.service.ItemService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,5 +29,15 @@ public class ItemController {
     @ResponseStatus(HttpStatus.CREATED)
     public ItemResponse saveItem(@Valid @RequestBody ItemResponse itemResponse) {
         return itemService.saveItem(itemResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<String> deleteItem(@PathVariable Long id) {
+        boolean wasDeleted = itemService.deleteItem(id);
+        if (!wasDeleted) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
