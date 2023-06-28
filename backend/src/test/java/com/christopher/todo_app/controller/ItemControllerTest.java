@@ -13,11 +13,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static com.christopher.todo_app.Constants.WAS_DELETED;
+import static com.christopher.todo_app.Constants.WAS_NOT_DELETED;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -95,5 +96,29 @@ class ItemControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("DELETE /items/{id} - should return NO_CONTENT for existing id")
+    void shouldReturnNO_CONTENTForExistingId() throws Exception {
+        final long deleteId = 1L;
+
+        when(itemService.deleteItem(1L))
+            .thenReturn(WAS_DELETED);
+
+        mockMvc.perform(delete(String.format("/items/%d", deleteId)))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("DELETE /items/{id} - should return NOT_FOUND for non-existing id")
+    void shouldReturnNOT_FOUNDForNonExistingId() throws Exception {
+        final long deleteId = 2L;
+
+        when(itemService.deleteItem(2L))
+            .thenReturn(WAS_NOT_DELETED);
+
+        mockMvc.perform(delete(String.format("/items/%d", deleteId)))
+            .andExpect(status().isNotFound());
     }
 }
