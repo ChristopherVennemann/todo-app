@@ -1,7 +1,7 @@
 ############
 ### ROOT ###
 
-sonarlint/
+/.idea/sonarlint/
 
 ###############
 ### BACKEND ###
@@ -71,3 +71,4 @@ backend/**/*.ipr
 /frontend/**/*.njsproj
 /frontend/**/*.sln
 /frontend/**/*.sw?
+/.idea/sonarlint/
