@@ -4,6 +4,7 @@ import com.christopher.todo_app.dto.ItemResponse;
 import com.christopher.todo_app.entity.Item;
 import com.christopher.todo_app.repository.ItemRepository;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -26,6 +27,7 @@ public class ItemServiceTest {
     private ItemService itemService;
 
     @Test
+    @DisplayName("Should return list of all Items")
     void shouldReturnItemList() {
         final Item expectedItem1 = new Item(1L, "item1");
         final Item expectedItem2 = new Item(2L, "item2");
@@ -44,6 +46,7 @@ public class ItemServiceTest {
     }
 
     @Test
+    @DisplayName("Should save an Item and return it")
     void shouldSaveItemAndReturnIt() throws Exception {
         final ItemResponse initialItem = new ItemResponse(null, "item1");
         final ItemResponse expectedItem = new ItemResponse(1L, "item1");

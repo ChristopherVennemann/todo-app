@@ -34,6 +34,7 @@ class BackendApplicationTests {
     }
 
     @Test
+    @DisplayName("GET /items - should return OK")
     void shouldReturnStatusOk200() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders.get("/items");
 
@@ -42,6 +43,7 @@ class BackendApplicationTests {
     }
 
     @Test
+    @DisplayName("POST /items - should return CREATED and the created item for valid request")
     void shouldReturnStatusCreated201ForValidPost() throws Exception {
         @Language("json") final String requestBody = """
             {
@@ -61,6 +63,7 @@ class BackendApplicationTests {
     }
 
     @Test
+    @DisplayName("POST /items - should return BAD_REQUEST for invalid request")
     void shouldReturnStatusBadRequest400ForInvalidPost() throws Exception {
         @Language("json") final String requestBody = """
             {

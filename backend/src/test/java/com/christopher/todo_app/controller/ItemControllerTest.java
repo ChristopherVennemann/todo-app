@@ -87,6 +87,7 @@ class ItemControllerTest {
     }
 
     @Test
+    @DisplayName("POST /items - should return BAD_REQUEST for empty request body")
     void shouldReturnBadRequestForEmptyRequest() throws Exception {
         final String requestBody = "{}";
 
