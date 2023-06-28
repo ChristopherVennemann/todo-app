@@ -86,9 +86,17 @@ html {
   border-radius: 0.5em;
   font: $font-items;
 
+  #delete {
+    opacity: 0;
+  }
+
   &:hover {
     box-shadow: 1px 1px rgba($shadow-color, 0.5);
     background-color: rgba($primary-color, 0.4);
+
+    #delete {
+      opacity: 0.6;
+    }
   }
 
   img {
