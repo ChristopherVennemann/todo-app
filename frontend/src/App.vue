@@ -3,23 +3,35 @@ import axios, {AxiosResponse, HttpStatusCode} from "axios";
 import {onMounted, Ref, ref} from "vue";
 import Item from "@/types/Item";
 
-let items: Ref<Item[]> = ref([])
-let newItemMessage: string = ''
+let items: Ref<Item[]> = ref([]);
+let newItemMessage: string = '';
 
 async function getData(): Promise<Item[]> {
-  const response: AxiosResponse = await axios.get('http://localhost:8082/items')
-  return response.data
+  const response: AxiosResponse = await axios.get('http://localhost:8082/items');
+  return response.data;
 }
 
-async function addNewItem() {
+async function addNewItem(): Promise<void> {
   const response = await axios.post(
       'http://localhost:8082/items',
       {"message": newItemMessage}
-  )
+  );
 
   if (response.status === HttpStatusCode.Created) {
     items.value.push(response.data);
-    newItemMessage = ''
+    newItemMessage = '';
+  }
+}
+
+async function deleteItem(id: number): Promise<void> {
+  console.log(id)
+  const response = await axios.delete(`http://localhost:8082/items/${id}`);
+  if (response.status == HttpStatusCode.NoContent) {
+    for (let i = 0; i < items.value.length; i++) {
+      if (items.value[i].id == id) {
+        items.value.splice(i, 1);
+      }
+    }
   }
 }
 
@@ -44,7 +56,9 @@ onMounted(async () => {
     <div id="item-list">
       <div v-for="item in items" :key="item.id" class="item-box row" data-cy="item">
         <p class="col align-self-end">{{ item.message }}</p>
-        <img alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png">
+        <img id="delete" alt="" class="col-2 align-self-center" src="@/images/trashcan.png"
+             @click="deleteItem(item.id)"/>
+        <img alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png"/>
       </div>
 
     </div>

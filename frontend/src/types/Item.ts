@@ -1,5 +1,5 @@
 interface Item {
-    message: String,
+    message: string,
     id: number
 }
 
