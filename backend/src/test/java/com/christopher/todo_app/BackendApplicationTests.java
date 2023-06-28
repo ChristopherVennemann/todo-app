@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -36,13 +37,13 @@ class BackendApplicationTests {
     @Test
     @DisplayName("GET /items - should return OK")
     void shouldReturnStatusOk200() throws Exception {
-        RequestBuilder request = MockMvcRequestBuilders.get("/items");
-
-        mockMvc.perform(request)
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/items"))
             .andExpect(status().isOk());
     }
 
     @Test
+    @DirtiesContext
     @DisplayName("POST /items - should return CREATED and the created item for valid request")
     void shouldReturnStatusCreated201ForValidPost() throws Exception {
         @Language("json") final String requestBody = """
@@ -63,6 +64,7 @@ class BackendApplicationTests {
     }
 
     @Test
+    @DirtiesContext
     @DisplayName("POST /items - should return BAD_REQUEST for invalid request")
     void shouldReturnStatusBadRequest400ForInvalidPost() throws Exception {
         @Language("json") final String requestBody = """
@@ -81,6 +83,7 @@ class BackendApplicationTests {
     }
 
     @Test
+    @DirtiesContext
     @DisplayName("DELETE /items/{id} - should return NO_CONTENT and delete the item for valid request")
     void shouldReturnStatusNoContent204ForValidDelete() throws Exception {
         final List<ItemResponse> expectedItems = List.of(
@@ -107,6 +110,7 @@ class BackendApplicationTests {
     }
 
     @Test
+    @DirtiesContext
     @DisplayName("DELETE /items/{id} - should return NOT_FOUND and not delete items for invalid request")
     void shouldReturnStatusNotFound404ForValidDelete() throws Exception {
         final List<ItemResponse> expectedItems = List.of(
