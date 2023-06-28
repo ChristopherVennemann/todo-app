@@ -86,6 +86,17 @@ html {
   border-radius: 0.5em;
   font: $font-items;
 
+  img {
+    height: 60px;
+    width: auto;
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1 !important;
+      cursor: pointer;
+    }
+  }
+
   #delete {
     opacity: 0;
   }
@@ -96,17 +107,6 @@ html {
 
     #delete {
       opacity: 0.6;
-    }
-  }
-
-  img {
-    height: 60px;
-    width: auto;
-    opacity: 0.6;
-
-    &:hover {
-      opacity: 0.8;
-      cursor: pointer;
     }
   }
 }
