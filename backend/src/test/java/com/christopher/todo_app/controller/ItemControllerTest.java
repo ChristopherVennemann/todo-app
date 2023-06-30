@@ -43,12 +43,12 @@ class ItemControllerTest {
 
         mockMvc.perform(get("/items"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].message", is(expectedList.get(0).getMessage())))
-            .andExpect(jsonPath("$[0].id", is(expectedList.get(0).getId()), Long.class))
-            .andExpect(jsonPath("$[1].message", is(expectedList.get(1).getMessage())))
-            .andExpect(jsonPath("$[1].id", is(expectedList.get(1).getId()), Long.class))
-            .andExpect(jsonPath("$[2].message", is(expectedList.get(2).getMessage())))
-            .andExpect(jsonPath("$[2].id", is(expectedList.get(2).getId()), Long.class));
+            .andExpect(jsonPath("$._embedded.itemResponseList[0].message", is(expectedList.get(0).getMessage())))
+            .andExpect(jsonPath("$._embedded.itemResponseList[0].id", is(expectedList.get(0).getId()), Long.class))
+            .andExpect(jsonPath("$._embedded.itemResponseList[1].message", is(expectedList.get(1).getMessage())))
+            .andExpect(jsonPath("$._embedded.itemResponseList[1].id", is(expectedList.get(1).getId()), Long.class))
+            .andExpect(jsonPath("$._embedded.itemResponseList[2].message", is(expectedList.get(2).getMessage())))
+            .andExpect(jsonPath("$._embedded.itemResponseList[2].id", is(expectedList.get(2).getId()), Long.class));
     }
 
     //TODO: test for empty list

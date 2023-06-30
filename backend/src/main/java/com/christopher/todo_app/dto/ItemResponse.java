@@ -7,12 +7,13 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class ItemResponse {
+public class ItemResponse extends RepresentationModel<ItemResponse> {
 
     @Getter
     private Long id;

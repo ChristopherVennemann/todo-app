@@ -4,11 +4,16 @@ import com.christopher.todo_app.dto.ItemResponse;
 import com.christopher.todo_app.service.ItemService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @CrossOrigin
 @RestController
@@ -19,16 +24,31 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
 
+    private static ItemResponse addLinks(ItemResponse item) {
+        item.add(linkTo(methodOn(ItemController.class).getItems()).withRel(IanaLinkRelations.COLLECTION));
+        item.add(linkTo(methodOn(ItemController.class).deleteItem(item.getId())).withRel("delete"));
+        return item;
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemResponse> getItems() {
-        return itemService.getItems();
+    public CollectionModel<ItemResponse> getItems() {
+        List<ItemResponse> items = itemService.getItems()
+            .stream()
+            .map(ItemController::addLinks)
+            .toList();
+
+        CollectionModel<ItemResponse> model = CollectionModel.of(items);
+        model.add(linkTo(methodOn(ItemController.class).getItems()).withSelfRel());
+        model.add(linkTo(methodOn(ItemController.class).saveItem(null)).withRel("post"));
+
+        return model;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ItemResponse saveItem(@Valid @RequestBody ItemResponse itemResponse) {
-        return itemService.saveItem(itemResponse);
+        return addLinks(itemService.saveItem(itemResponse));
     }
 
     @DeleteMapping("/{id}")
