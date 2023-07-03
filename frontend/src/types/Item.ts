@@ -1,6 +1,11 @@
+import Link from "@/types/Link";
+
 interface Item {
     message: string,
-    id: number
+    id: number;
+    _links: {
+        delete: Link;
+    }
 }
 
-export default Item
+export default Item;

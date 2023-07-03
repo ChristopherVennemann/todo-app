@@ -2,18 +2,24 @@
 import axios, {AxiosResponse, HttpStatusCode} from "axios";
 import {onMounted, Ref, ref} from "vue";
 import Item from "@/types/Item";
+import CollectionModel from "@/types/CollectionModel";
+import LinkCollection from "@/types/LinkCollection";
 
-let items: Ref<Item[]> = ref([]);
+const initialItemLink: string = 'http://localhost:8082/items'
+
+let model: CollectionModel;
+let endpoints: LinkCollection;
+const items: Ref<Item[]> = ref([]);
 let newItemMessage: string = '';
 
-async function getData(): Promise<Item[]> {
-  const response: AxiosResponse = await axios.get('http://localhost:8082/items');
+async function getData(): Promise<CollectionModel> {
+  const response: AxiosResponse = await axios.get(initialItemLink);
   return response.data;
 }
 
 async function addNewItem(): Promise<void> {
   const response = await axios.post(
-      'http://localhost:8082/items',
+      endpoints.post.href,
       {"message": newItemMessage}
   );
 
@@ -23,12 +29,11 @@ async function addNewItem(): Promise<void> {
   }
 }
 
-async function deleteItem(id: number): Promise<void> {
-  console.log(id)
-  const response = await axios.delete(`http://localhost:8082/items/${id}`);
+async function deleteItem(item: Item): Promise<void> {
+  const response = await axios.delete(item._links.delete.href);
   if (response.status == HttpStatusCode.NoContent) {
     for (let i = 0; i < items.value.length; i++) {
-      if (items.value[i].id == id) {
+      if (items.value[i].id == item.id) {
         items.value.splice(i, 1);
       }
     }
@@ -36,8 +41,11 @@ async function deleteItem(id: number): Promise<void> {
 }
 
 onMounted(async () => {
-  items.value = await getData()
+  model = await getData();
+  items.value = model?._embedded ? model._embedded.itemResponseList : [];
+  endpoints = model._links;
 })
+
 </script>
 
 <template>
@@ -57,7 +65,7 @@ onMounted(async () => {
       <div v-for="item in items" :key="item.id" class="item-box row" data-cy="item">
         <p class="col align-self-end">{{ item.message }}</p>
         <img id="delete" alt="" class="col-2 align-self-center" src="@/images/trashcan.png"
-             @click="deleteItem(item.id)"/>
+             @click="deleteItem(item)"/>
         <img alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png"/>
       </div>
 
