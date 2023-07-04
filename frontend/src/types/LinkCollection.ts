@@ -1,8 +1,10 @@
-import Link from "@/types/Link";
-
 interface LinkCollection {
-    self: Link;
-    post: Link;
+    self: {
+        href: string;
+    }
+    post: {
+        href: string;
+    }
 }
 
 export default LinkCollection;
