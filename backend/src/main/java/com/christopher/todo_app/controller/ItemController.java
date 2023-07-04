@@ -59,4 +59,13 @@ public class ItemController {
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PutMapping("/{id}/done")
+    public ResponseEntity<ItemResponse> setItemToDone(@PathVariable Long id) {
+        ItemResponse response = itemService.setItemToDone(id);
+        if (response == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

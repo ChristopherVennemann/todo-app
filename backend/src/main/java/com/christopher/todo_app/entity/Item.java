@@ -6,12 +6,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "item")
 @AllArgsConstructor
-@NoArgsConstructor
 public class Item {
 
     @Id
@@ -25,7 +24,16 @@ public class Item {
     @Getter
     private String message;
 
+    @Getter
+    @Setter
+    @Column(name = "is_done", nullable = false)
+    private boolean isDone;
+
+    public Item() {
+        isDone = false;
+    }
+
     public static Item of(ItemResponse itemResponse) {
-        return new Item(itemResponse.getId(), itemResponse.getMessage());
+        return new Item(itemResponse.getId(), itemResponse.getMessage(), itemResponse.isDone());
     }
 }

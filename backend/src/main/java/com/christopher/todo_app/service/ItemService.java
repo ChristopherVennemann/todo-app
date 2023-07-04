@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.christopher.todo_app.Constants.WAS_DELETED;
 import static com.christopher.todo_app.Constants.WAS_NOT_DELETED;
@@ -31,5 +32,18 @@ public class ItemService {
         }
         itemRepository.deleteById(id);
         return WAS_DELETED;
+    }
+
+    public ItemResponse setItemToDone(Long id) {
+        Item changedItem = null;
+        Optional<Item> retrievedItem = itemRepository.findById(id);
+
+        if (retrievedItem.isPresent()) {
+            changedItem = retrievedItem.get();
+            changedItem.setDone(true);
+            itemRepository.save(changedItem);
+        }
+
+        return changedItem != null ? ItemResponse.of(changedItem) : null;
     }
 }
