@@ -27,6 +27,7 @@ public class ItemController {
     private static ItemResponse addLinks(ItemResponse item) {
         item.add(linkTo(methodOn(ItemController.class).getItems()).withRel(IanaLinkRelations.COLLECTION));
         item.add(linkTo(methodOn(ItemController.class).deleteItem(item.getId())).withRel("delete"));
+        item.add(linkTo(methodOn(ItemController.class).setItemToDone(item.getId())).withRel("setToDone"));
         return item;
     }
 
@@ -66,6 +67,6 @@ public class ItemController {
         if (response == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(addLinks(response), HttpStatus.OK);
     }
 }

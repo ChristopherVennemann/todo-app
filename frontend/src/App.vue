@@ -40,9 +40,22 @@ async function deleteItem(item: Item): Promise<void> {
   }
 }
 
+async function setDoneStatus(href: string): Promise<void> {
+  console.log(items.value);
+  const response = await axios.put(href);
+  if (response.status === HttpStatusCode.Ok) {
+    const updatedItem: Item = response.data;
+    for (let i = 0; i < items.value.length; i++) {
+      if (items.value[i].id == updatedItem.id) {
+        items.value[i] = updatedItem;
+      }
+    }
+  }
+  console.log(items.value);
+}
+
 onMounted(async () => {
   model = await getItems();
-  console.log(model)
   items.value = model?._embedded ? model._embedded.itemResponseList : [];
   endpoints = model._links;
 })
@@ -68,7 +81,8 @@ onMounted(async () => {
         <img id="delete" alt="" class="col-2 align-self-center" src="@/images/trashcan.png"
              @click="deleteItem(item)"/>
         <img v-if="item.done" alt="" class="col-2 align-self-center" src="@/images/circle_checked_white.png"/>
-        <img v-else alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png"/>
+        <img v-else alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png"
+             @click="setDoneStatus(item._links.setToDone.href)"/>
       </div>
 
     </div>

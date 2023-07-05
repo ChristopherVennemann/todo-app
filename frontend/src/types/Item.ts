@@ -5,8 +5,11 @@ interface Item {
     _links: {
         collection: {
             href: string;
-        }
+        },
         delete: {
+            href: string;
+        }
+        setToDone: {
             href: string;
         }
     }

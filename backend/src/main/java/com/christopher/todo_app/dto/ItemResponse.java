@@ -12,7 +12,6 @@ import org.springframework.hateoas.RepresentationModel;
 import java.util.List;
 
 @AllArgsConstructor
-@NoArgsConstructor
 public class ItemResponse extends RepresentationModel<ItemResponse> {
 
     @Getter
