@@ -6,14 +6,12 @@ import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.List;
 
 @AllArgsConstructor
-@NoArgsConstructor
 public class ItemResponse extends RepresentationModel<ItemResponse> {
 
     @Getter
@@ -27,6 +25,10 @@ public class ItemResponse extends RepresentationModel<ItemResponse> {
     @Getter
     @Setter
     private boolean isDone;
+
+    public ItemResponse() {
+        this.isDone = false;
+    }
 
     public static ItemResponse of(Item item) {
         return new ItemResponse(item.getId(), item.getMessage(), item.isDone());

@@ -50,7 +50,7 @@ class BackendApplicationTests {
             {
                 "message": "item 1"
             }""";
-        final ItemResponse expectedItem = new ItemResponse(1L, "item 1");
+        final ItemResponse expectedItem = new ItemResponse(1L, "item 1", false);
 
         RequestBuilder request = MockMvcRequestBuilders
             .post("/items")
@@ -87,8 +87,8 @@ class BackendApplicationTests {
     @DisplayName("DELETE /items/{id} - should return NO_CONTENT and delete the item for valid request")
     void shouldReturnStatusNoContent204ForValidDelete() throws Exception {
         final List<ItemResponse> expectedItems = List.of(
-            new ItemResponse(null, "item1"),
-            new ItemResponse(null, "item2")
+            new ItemResponse(null, "item1", false),
+            new ItemResponse(null, "item2", false)
         );
         final String deletePath = "/items/1";
 
@@ -114,8 +114,8 @@ class BackendApplicationTests {
     @DisplayName("DELETE /items/{id} - should return NOT_FOUND and not delete items for invalid request")
     void shouldReturnStatusNotFound404ForValidDelete() throws Exception {
         final List<ItemResponse> expectedItems = List.of(
-            new ItemResponse(null, "item1"),
-            new ItemResponse(null, "item2")
+            new ItemResponse(null, "item1", false),
+            new ItemResponse(null, "item2", false)
         );
         final String deletePath = "/items/3";
 

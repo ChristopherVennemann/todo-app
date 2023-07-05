@@ -35,9 +35,9 @@ class ItemControllerTest {
     @DisplayName("GET /items - returns OK and list of all items")
     void getItemsShouldReturnListOfAllItems() throws Exception {
         final List<ItemResponse> expectedList = List.of(
-            new ItemResponse(1L, "item 1"),
-            new ItemResponse(2L, "item 2"),
-            new ItemResponse(3L, "item 3")
+            new ItemResponse(1L, "item 1", false),
+            new ItemResponse(2L, "item 2", false),
+            new ItemResponse(3L, "item 3", false)
         );
         when(itemService.getItems()).thenReturn(expectedList);
 
@@ -60,7 +60,7 @@ class ItemControllerTest {
             {
                 "message": "item 1"
             }""";
-        final ItemResponse expectedItem = new ItemResponse(1L, "item 1");
+        final ItemResponse expectedItem = new ItemResponse(1L, "item 1", false);
 
         when(itemService.saveItem(any()))
             .thenReturn(expectedItem);
@@ -124,10 +124,15 @@ class ItemControllerTest {
 
     @Test
     @DisplayName("PUT /items/{id}/done - should return OK and updated item")
-    void shouldReturnOKAndUpdatedItemForExistingId() {
+    void shouldReturnOKAndUpdatedItemForExistingId() throws Exception {
         final long putId = 1L;
+        ItemResponse expectedItem = new ItemResponse(1L, "test", true);
 
         when(itemService.setItemToDone(putId))
-            .thenReturn(WAS_DELETED);
+            .thenReturn(expectedItem);
+
+        mockMvc.perform(delete(String.format("/items/%d", putId)))
+            .andExpect(status().isNoContent())
+            .andExpect(jsonPath("$.isDone", is(expectedItem.isDone())));
     }
 }

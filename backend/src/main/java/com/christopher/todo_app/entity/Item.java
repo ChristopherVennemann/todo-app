@@ -30,7 +30,7 @@ public class Item {
     private boolean isDone;
 
     public Item() {
-        isDone = false;
+        this.isDone = false;
     }
 
     public static Item of(ItemResponse itemResponse) {
