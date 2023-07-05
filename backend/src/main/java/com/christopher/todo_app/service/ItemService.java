@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.christopher.todo_app.Constants.WAS_DELETED;
-import static com.christopher.todo_app.Constants.WAS_NOT_DELETED;
+import static com.christopher.todo_app.Constants.WAS_NOT_SUCCESSFUL;
+import static com.christopher.todo_app.Constants.WAS_SUCESSFUL;
 
 @Service
 public class ItemService {
@@ -27,9 +27,9 @@ public class ItemService {
 
     public boolean deleteItem(final Long id) {
         if (!itemRepository.existsById(id)) {
-            return WAS_NOT_DELETED;
+            return WAS_NOT_SUCCESSFUL;
         }
         itemRepository.deleteById(id);
-        return WAS_DELETED;
+        return WAS_SUCESSFUL;
     }
 }
