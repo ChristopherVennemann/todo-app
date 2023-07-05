@@ -137,8 +137,8 @@ class BackendApplicationTests {
 
     @Test
     @DirtiesContext
-    @DisplayName("PUT /items/{id}/done - Should return Status OK and updated item for valid request")
-    void shouldRetryStatusOkAndUpdatedItemForValidRequest() throws Exception {
+    @DisplayName("PUT /items/{id}/done - Should return Status OK and item with isDone==true for valid request")
+    void shouldReturnStatusOkAndDoneItemValidSetDoneRequest() throws Exception {
         @Language("json") final String postRequestBody = """
             {
                 "message": "test"
@@ -158,10 +158,41 @@ class BackendApplicationTests {
     @Test
     @DirtiesContext
     @DisplayName("PUT /items/{id}/done - Should return Status NO_Content and no body for invalid request")
-    void shouldRetryStatusNoContentAndNoBodyForInvalidRequest() throws Exception {
+    void shouldReturnStatusNoContentAndNoBodyForInvalidSetDoneRequest() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders
                 .put("/items/1/done"))
+            .andExpect(status().isNoContent())
+            .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("PUT /items/{id}/undone - Should return Status OK and item with isDone==false for valid request")
+    void shouldReturnStatusOkAndUnoneItemValidSetUndoneRequest() throws Exception {
+        @Language("json") final String postRequestBody = """
+            {
+                "message": "test"
+            }""";
+
+        mockMvc.perform(MockMvcRequestBuilders
+            .post("/items")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(postRequestBody));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .put("/items/1/undone"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.done", is(false)));
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("PUT /items/{id}/undone - Should return Status NO_Content and no body for invalid request")
+    void shouldReturnStatusNoContentAndNoBodyForInvalidSetUndoneRequest() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .put("/items/1/undone"))
             .andExpect(status().isNoContent())
             .andExpect(jsonPath("$").doesNotExist());
     }

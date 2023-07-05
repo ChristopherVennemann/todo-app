@@ -123,8 +123,8 @@ class ItemControllerTest {
     }
 
     @Test
-    @DisplayName("PUT /items/{id}/done - should return OK and updated item for existing id")
-    void shouldReturnOKAndUpdatedItemForExistingId() throws Exception {
+    @DisplayName("PUT /items/{id}/done - should return OK and item with isDone==true for existing id")
+    void shouldReturnOKAndDoneItemForExistingId() throws Exception {
         final ItemResponse expectedItem = new ItemResponse(1L, "test", true);
 
         when(itemService.setItemToDone(expectedItem.getId()))
@@ -137,11 +137,35 @@ class ItemControllerTest {
 
     @Test
     @DisplayName("PUT /items/{id}/done - should return NO_CONTENT and empty body for non-existing id")
-    void shouldReturnNO_CONTENTAndEmptyBodyForNonExistingId() throws Exception {
+    void shouldReturnNO_CONTENTAndEmptyBodyForDoneOnNonExistingId() throws Exception {
         when(itemService.setItemToDone(1L))
             .thenReturn(null);
 
         mockMvc.perform(put(String.format("/items/%d/done", 1)))
+            .andExpect(status().isNoContent())
+            .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    @DisplayName("PUT /items/{id}/undone - should return OK and item with isDone==false for existing id")
+    void shouldReturnOKAndUndoneItemForExistingId() throws Exception {
+        final ItemResponse expectedItem = new ItemResponse(1L, "test", false);
+
+        when(itemService.setItemToUndone(expectedItem.getId()))
+            .thenReturn(expectedItem);
+
+        mockMvc.perform(put(String.format("/items/%d/undone", expectedItem.getId())))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.done", is(expectedItem.isDone())));
+    }
+
+    @Test
+    @DisplayName("PUT /items/{id}/done - should return NO_CONTENT and empty body for non-existing id")
+    void shouldReturnNO_CONTENTAndEmptyBodyForNonExistingId() throws Exception {
+        when(itemService.setItemToDone(1L))
+            .thenReturn(null);
+
+        mockMvc.perform(put(String.format("/items/%d/undone", 1)))
             .andExpect(status().isNoContent())
             .andExpect(jsonPath("$").doesNotExist());
     }

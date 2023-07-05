@@ -83,8 +83,8 @@ public class ItemServiceTest {
     }
 
     @Test
-    @DisplayName("Should return updated item if Id exists")
-    public void shouldReturnUpdatedItemIfIdExists() {
+    @DisplayName("Should return item with isDone==true if Id exists")
+    public void shouldReturnDoneItemForSetItemToDoneIfIdExists() {
         final long updateId = 1L;
         ItemResponse expectedItem = new ItemResponse(updateId, "test", true);
         when(itemRepository.findById(updateId)).thenReturn(Optional.of(Item.of(expectedItem)));
@@ -95,12 +95,35 @@ public class ItemServiceTest {
     }
 
     @Test
-    @DisplayName("Should return null if Id doesn't exists")
-    public void shouldReturnNullIdIdDoesntExist() {
+    @DisplayName("Should return null for setItemToDone if Id doesn't exists")
+    public void shouldReturnNullForSetItemToDoneIfIdDoesntExist() {
         final long updateId = 1L;
         when(itemRepository.findById(updateId)).thenReturn(Optional.empty());
 
         final ItemResponse actualItem = itemService.setItemToDone(updateId);
+
+        assertThat(actualItem).isNull();
+    }
+
+    @Test
+    @DisplayName("Should return item with isDone==false if Id exists")
+    public void shouldReturnUndoneItemForSetItemToUndoneIfIdExists() {
+        final long updateId = 1L;
+        ItemResponse expectedItem = new ItemResponse(updateId, "test", false);
+        when(itemRepository.findById(updateId)).thenReturn(Optional.of(Item.of(expectedItem)));
+
+        final ItemResponse actualItem = itemService.setItemToUndone(updateId);
+
+        assertThat(actualItem.isDone()).isFalse();
+    }
+
+    @Test
+    @DisplayName("Should return null for setItemToDone if Id doesn't exists")
+    public void shouldReturnNullForSetItemToUndoneIfIdDoesntExist() {
+        final long updateId = 1L;
+        when(itemRepository.findById(updateId)).thenReturn(Optional.empty());
+
+        final ItemResponse actualItem = itemService.setItemToUndone(updateId);
 
         assertThat(actualItem).isNull();
     }
