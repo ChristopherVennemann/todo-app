@@ -80,9 +80,10 @@ onMounted(async () => {
         <p class="col align-self-end">{{ item.message }}</p>
         <img id="delete" alt="" class="col-2 align-self-center" src="@/images/trashcan.png"
              @click="deleteItem(item)"/>
-        <img v-if="item.done" alt="" class="col-2 align-self-center" src="@/images/circle_checked_white.png"
+        <img v-if="item.done" id="checkbox" alt="" class="col-2 align-self-center done"
+             src="@/images/circle_checked_white.png"
              @click="setDoneStatus(item._links.setToUndone.href)"/>
-        <img v-else alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png"
+        <img v-else id="checkbox" alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png"
              @click="setDoneStatus(item._links.setToDone.href)"/>
       </div>
 

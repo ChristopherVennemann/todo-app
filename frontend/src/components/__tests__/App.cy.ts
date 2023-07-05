@@ -1,8 +1,49 @@
 // @ts-ignore
 import App from "../../App.vue";
 import collectionModel from "@/types/CollectionModel";
+import Item from "@/types/Item";
 
 const validRequestBody = {message: "item 1"};
+
+const undoneItem: Item = {
+    id: 1,
+    message: "test",
+    done: false,
+    _links: {
+        collection: {
+            href: "http://localhost:8082/items"
+        },
+        delete: {
+            href: "http://localhost:8082/items/1"
+        },
+        setToDone: {
+            href: "http://localhost:8082/items/1/done"
+        },
+        setToUndone: {
+            href: "http://localhost:8082/items/1/undone"
+        }
+    }
+}
+
+const doneItem: Item = {
+    id: 1,
+    message: "test",
+    done: true,
+    _links: {
+        collection: {
+            href: "http://localhost:8082/items"
+        },
+        delete: {
+            href: "http://localhost:8082/items/1"
+        },
+        setToDone: {
+            href: "http://localhost:8082/items/1/done"
+        },
+        setToUndone: {
+            href: "http://localhost:8082/items/1/undone"
+        }
+    }
+}
 
 const collectionModelEmpty: collectionModel = {
     _links: {
@@ -14,23 +55,10 @@ const collectionModelEmpty: collectionModel = {
         }
     }
 }
-
 const collectionModelOneItem: collectionModel = {
     _embedded: {
         itemResponseList: [
-            {
-                id: 1,
-                message: "test",
-                done: false,
-                _links: {
-                    collection: {
-                        href: "http://localhost:8082/items"
-                    },
-                    delete: {
-                        href: "http://localhost:8082/items/1"
-                    }
-                }
-            }
+            undoneItem
         ]
     },
     _links: {
@@ -121,4 +149,44 @@ describe('<App />', () => {
             expect(deleteRequest.request.url).to.equal(expectedDeleteUrl);
         })
     })
+
+    it('changes item status when done-checkbox is clicked', () => {
+        const expectedSetDoneUrl: string = collectionModelOneItem._embedded.itemResponseList[0]._links.setToDone.href;
+        const expectedSetUndoneUrl: string = collectionModelOneItem._embedded.itemResponseList[0]._links.setToUndone.href;
+        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelOneItem});
+        cy.intercept('PUT', expectedSetDoneUrl, {statusCode: 200, body: doneItem}).as('doneRequest');
+        cy.intercept('PUT', expectedSetUndoneUrl, {statusCode: 200, body: undoneItem}).as('undoneRequest');
+
+        cy.mount(App);
+
+        cy.get('#checkbox').click();
+        cy.wait('@doneRequest').should(result => {
+            // @ts-ignore
+            expect(result.request.url).to.equal(undoneItem._links.setToDone.href);
+        })
+
+        cy.get('#checkbox').click();
+        cy.wait('@undoneRequest').should(result => {
+            // @ts-ignore
+            expect(result.request.url).to.equal(doneItem._links.setToUndone.href);
+        })
+    })
+
+    it('updates item list after done status change', () => {
+        const setDoneUrl: string = collectionModelOneItem._embedded.itemResponseList[0]._links.setToDone.href;
+        const setUndoneUrl: string = collectionModelOneItem._embedded.itemResponseList[0]._links.setToUndone.href;
+        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelOneItem});
+        cy.intercept('PUT', setDoneUrl, {statusCode: 200, body: doneItem});
+        cy.intercept('PUT', setUndoneUrl, {statusCode: 200, body: undoneItem});
+
+        cy.mount(App);
+
+        cy.get('#checkbox').click()
+        cy.get('#checkbox').should('have.class', 'done');
+
+        cy.get('#checkbox').click()
+        cy.get('#checkbox').should('not.have.class', 'done');
+    })
+
+
 })
