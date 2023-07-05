@@ -98,7 +98,6 @@ public class ItemServiceTest {
     @DisplayName("Should return null if Id doesn't exists")
     public void shouldReturnNullIdIdDoesntExist() {
         final long updateId = 1L;
-        final Item expectedNull = null;
         when(itemRepository.findById(updateId)).thenReturn(Optional.empty());
 
         final ItemResponse actualItem = itemService.setItemToDone(updateId);

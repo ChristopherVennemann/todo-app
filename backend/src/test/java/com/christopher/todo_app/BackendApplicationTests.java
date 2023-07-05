@@ -134,4 +134,35 @@ class BackendApplicationTests {
                 .get("/items"))
             .andExpect(jsonPath("$._embedded.itemResponseList", hasSize(2)));
     }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("PUT /items/{id}/done - Should return Status OK and updated item for valid request")
+    void shouldRetryStatusOkAndUpdatedItemForValidRequest() throws Exception {
+        @Language("json") final String postRequestBody = """
+            {
+                "message": "test"
+            }""";
+
+        mockMvc.perform(MockMvcRequestBuilders
+            .post("/items")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(postRequestBody));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .put("/items/1/done"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.done", is(true)));
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("PUT /items/{id}/done - Should return Status NO_Content and no body for invalid request")
+    void shouldRetryStatusNoContentAndNoBodyForInvalidRequest() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .put("/items/1/done"))
+            .andExpect(status().isNoContent())
+            .andExpect(jsonPath("$").doesNotExist());
+    }
 }

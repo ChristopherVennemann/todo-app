@@ -138,8 +138,6 @@ class ItemControllerTest {
     @Test
     @DisplayName("PUT /items/{id}/done - should return NO_CONTENT and empty body for non-existing id")
     void shouldReturnNO_CONTENTAndEmptyBodyForNonExistingId() throws Exception {
-        final ItemResponse expectedNull = null;
-
         when(itemService.setItemToDone(1L))
             .thenReturn(null);
 
