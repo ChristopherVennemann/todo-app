@@ -64,7 +64,7 @@ public class ItemController {
     public ResponseEntity<ItemResponse> setItemToDone(@PathVariable Long id) {
         ItemResponse response = itemService.setItemToDone(id);
         if (response == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

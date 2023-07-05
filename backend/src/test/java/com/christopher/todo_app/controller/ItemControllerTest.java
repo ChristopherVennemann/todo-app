@@ -123,16 +123,28 @@ class ItemControllerTest {
     }
 
     @Test
-    @DisplayName("PUT /items/{id}/done - should return OK and updated item")
+    @DisplayName("PUT /items/{id}/done - should return OK and updated item for existing id")
     void shouldReturnOKAndUpdatedItemForExistingId() throws Exception {
-        final long putId = 1L;
         ItemResponse expectedItem = new ItemResponse(1L, "test", true);
 
-        when(itemService.setItemToDone(putId))
+        when(itemService.setItemToDone(expectedItem.getId()))
             .thenReturn(expectedItem);
 
-        mockMvc.perform(delete(String.format("/items/%d", putId)))
+        mockMvc.perform(put(String.format("/items/%d/done", expectedItem.getId())))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.done", is(expectedItem.isDone())));
+    }
+
+    @Test
+    @DisplayName("PUT /items/{id}/done - should return NO_CONTENT and empty body for non-existing id")
+    void shouldReturnNO_CONTENTAndEmptyBodyForNonExistingId() throws Exception {
+        ItemResponse expectedNull = null;
+
+        when(itemService.setItemToDone(1L))
+            .thenReturn(null);
+
+        mockMvc.perform(put(String.format("/items/%d/done", 1)))
             .andExpect(status().isNoContent())
-            .andExpect(jsonPath("$.isDone", is(expectedItem.isDone())));
+            .andExpect(jsonPath("$").doesNotExist());
     }
 }

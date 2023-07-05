@@ -29,8 +29,8 @@ public class ItemServiceTest {
     @Test
     @DisplayName("Should return list of all Items")
     public void shouldReturnItemList() {
-        final Item expectedItem1 = new Item(1L, "item1");
-        final Item expectedItem2 = new Item(2L, "item2");
+        final Item expectedItem1 = new Item(1L, "item1", false);
+        final Item expectedItem2 = new Item(2L, "item2", false);
         final List<Item> expectedList = Arrays.asList(
             expectedItem1,
             expectedItem2
@@ -48,8 +48,8 @@ public class ItemServiceTest {
     @Test
     @DisplayName("Should save an Item and return it")
     public void shouldSaveItemAndReturnIt() {
-        final ItemResponse initialItem = new ItemResponse(null, "item1");
-        final ItemResponse expectedItem = new ItemResponse(1L, "item1");
+        final ItemResponse initialItem = new ItemResponse(null, "item1", false);
+        final ItemResponse expectedItem = new ItemResponse(1L, "item1", false);
         when(itemRepository.save(any(Item.class))).thenReturn(Item.of(expectedItem));
 
         ItemResponse actualItem = itemService.saveItem(initialItem);
