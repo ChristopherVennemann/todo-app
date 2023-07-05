@@ -1,6 +1,7 @@
 interface Item {
-    message: string,
     id: number;
+    message: string,
+    done: boolean;
     _links: {
         collection: {
             href: string;
