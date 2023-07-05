@@ -11,6 +11,9 @@ interface Item {
         }
         setToDone: {
             href: string;
+        },
+        setToUndone: {
+            href: string;
         }
     }
 }

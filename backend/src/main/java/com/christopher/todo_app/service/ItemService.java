@@ -43,7 +43,18 @@ public class ItemService {
             changedItem.setDone(true);
             itemRepository.save(changedItem);
         }
+        return changedItem != null ? ItemResponse.of(changedItem) : null;
+    }
 
+    public ItemResponse setItemToUndone(Long id) {
+        Item changedItem = null;
+        Optional<Item> retrievedItem = itemRepository.findById(id);
+
+        if (retrievedItem.isPresent()) {
+            changedItem = retrievedItem.get();
+            changedItem.setDone(false);
+            itemRepository.save(changedItem);
+        }
         return changedItem != null ? ItemResponse.of(changedItem) : null;
     }
 }
