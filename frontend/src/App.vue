@@ -14,7 +14,6 @@ let newItemMessage: string = '';
 
 async function getItems(): Promise<CollectionModel> {
   const response: AxiosResponse = await axios.get(initialItemLink);
-  console.log(response.data);
   return response.data;
 }
 
@@ -43,6 +42,7 @@ async function deleteItem(item: Item): Promise<void> {
 
 onMounted(async () => {
   model = await getItems();
+  console.log(model)
   items.value = model?._embedded ? model._embedded.itemResponseList : [];
   endpoints = model._links;
 })
