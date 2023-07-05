@@ -121,4 +121,13 @@ class ItemControllerTest {
         mockMvc.perform(delete(String.format("/items/%d", deleteId)))
             .andExpect(status().isNotFound());
     }
+
+    @Test
+    @DisplayName("PUT /items/{id}/done - should return OK and updated item")
+    void shouldReturnOKAndUpdatedItemForExistingId() {
+        final long putId = 1L;
+
+        when(itemService.setItemToDone(putId))
+            .thenReturn(WAS_DELETED);
+    }
 }
