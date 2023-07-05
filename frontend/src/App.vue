@@ -67,7 +67,8 @@ onMounted(async () => {
         <p class="col align-self-end">{{ item.message }}</p>
         <img id="delete" alt="" class="col-2 align-self-center" src="@/images/trashcan.png"
              @click="deleteItem(item)"/>
-        <img alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png"/>
+        <img v-if="item.done" alt="" class="col-2 align-self-center" src="@/images/circle_checked_white.png"/>
+        <img v-else alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png"/>
       </div>
 
     </div>
