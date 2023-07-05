@@ -105,8 +105,8 @@ class BackendApplicationTests {
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/items"))
-            .andExpect(jsonPath("$", hasSize(expectedItems.size() - 1)))
-            .andExpect(jsonPath("$[0].message", is(expectedItems.get(1).getMessage())));
+            .andExpect(jsonPath("$._embedded.itemResponseList", hasSize(expectedItems.size() - 1)))
+            .andExpect(jsonPath("$._embedded.itemResponseList[0].message", is(expectedItems.get(1).getMessage())));
     }
 
     @Test
@@ -132,6 +132,6 @@ class BackendApplicationTests {
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/items"))
-            .andExpect(jsonPath("$", hasSize(2)));
+            .andExpect(jsonPath("$._embedded.itemResponseList", hasSize(2)));
     }
 }
