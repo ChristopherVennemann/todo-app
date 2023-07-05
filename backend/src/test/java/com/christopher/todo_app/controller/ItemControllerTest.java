@@ -125,7 +125,7 @@ class ItemControllerTest {
     @Test
     @DisplayName("PUT /items/{id}/done - should return OK and updated item for existing id")
     void shouldReturnOKAndUpdatedItemForExistingId() throws Exception {
-        ItemResponse expectedItem = new ItemResponse(1L, "test", true);
+        final ItemResponse expectedItem = new ItemResponse(1L, "test", true);
 
         when(itemService.setItemToDone(expectedItem.getId()))
             .thenReturn(expectedItem);
@@ -138,7 +138,7 @@ class ItemControllerTest {
     @Test
     @DisplayName("PUT /items/{id}/done - should return NO_CONTENT and empty body for non-existing id")
     void shouldReturnNO_CONTENTAndEmptyBodyForNonExistingId() throws Exception {
-        ItemResponse expectedNull = null;
+        final ItemResponse expectedNull = null;
 
         when(itemService.setItemToDone(1L))
             .thenReturn(null);

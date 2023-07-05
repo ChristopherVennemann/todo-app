@@ -12,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -65,9 +66,9 @@ public class ItemServiceTest {
         final long deleteId = 1L;
         when(itemRepository.existsById(1L)).thenReturn(true);
 
-        final boolean wasSuccessful = itemService.deleteItem(deleteId);
+        final boolean wasDeleted = itemService.deleteItem(deleteId);
 
-        assertThat(wasSuccessful).isTrue();
+        assertThat(wasDeleted).isTrue();
     }
 
     @Test
@@ -76,8 +77,32 @@ public class ItemServiceTest {
         final long deleteId = 2L;
         when(itemRepository.existsById(2L)).thenReturn(false);
 
-        final boolean wasSuccessful = itemService.deleteItem(deleteId);
+        final boolean wasDeleted = itemService.deleteItem(deleteId);
 
-        assertThat(wasSuccessful).isFalse();
+        assertThat(wasDeleted).isFalse();
+    }
+
+    @Test
+    @DisplayName("Should return updated item if Id exists")
+    public void shouldReturnUpdatedItemIfIdExists() {
+        final long updateId = 1L;
+        ItemResponse expectedItem = new ItemResponse(updateId, "test", true);
+        when(itemRepository.findById(updateId)).thenReturn(Optional.of(Item.of(expectedItem)));
+
+        final ItemResponse actualItem = itemService.setItemToDone(updateId);
+
+        assertThat(actualItem.isDone()).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should return null if Id doesn't exists")
+    public void shouldReturnNullIdIdDoesntExist() {
+        final long updateId = 1L;
+        final Item expectedNull = null;
+        when(itemRepository.findById(updateId)).thenReturn(Optional.empty());
+
+        final ItemResponse actualItem = itemService.setItemToDone(updateId);
+
+        assertThat(actualItem).isNull();
     }
 }
