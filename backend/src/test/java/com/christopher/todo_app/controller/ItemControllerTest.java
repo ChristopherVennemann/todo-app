@@ -13,8 +13,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static com.christopher.todo_app.Constants.WAS_DELETED;
-import static com.christopher.todo_app.Constants.WAS_NOT_DELETED;
+import static com.christopher.todo_app.Constants.WAS_NOT_SUCCESSFUL;
+import static com.christopher.todo_app.Constants.WAS_SUCESSFUL;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -104,7 +104,7 @@ class ItemControllerTest {
         final long deleteId = 1L;
 
         when(itemService.deleteItem(1L))
-            .thenReturn(WAS_DELETED);
+            .thenReturn(WAS_SUCESSFUL);
 
         mockMvc.perform(delete(String.format("/items/%d", deleteId)))
             .andExpect(status().isNoContent());
@@ -116,7 +116,7 @@ class ItemControllerTest {
         final long deleteId = 2L;
 
         when(itemService.deleteItem(2L))
-            .thenReturn(WAS_NOT_DELETED);
+            .thenReturn(WAS_NOT_SUCCESSFUL);
 
         mockMvc.perform(delete(String.format("/items/%d", deleteId)))
             .andExpect(status().isNotFound());
