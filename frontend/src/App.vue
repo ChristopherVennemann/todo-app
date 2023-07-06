@@ -92,8 +92,8 @@ onUpdated(() => {
 
     <div id="item-list" data-cy="item-list">
       <div v-for="item in items" :key="item.id" :class="{ 'done': item.done, 'undone': !item.done}"
+           :data-cy="'item_' + item.id"
            class="item-box row"
-           data-cy="item"
       >
         <p class="col align-self-end">{{ item.message }}</p>
         <img id="delete" alt="" class="col-2 align-self-center" src="@/images/trashcan.png"

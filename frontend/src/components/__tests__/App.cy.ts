@@ -110,20 +110,20 @@ const collectionModelTwoItems: collectionModel = {
 
 describe('<App />', () => {
     it('renders', () => {
-        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelEmpty}).as('getAll');
+        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelEmpty});
         cy.mount(App);
     })
 
     it('has no initial items', () => {
-        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelEmpty}).as('getAll');
+        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelEmpty});
 
         cy.mount(App);
-        cy.get('[data-cy=item]').should('have.length', 0);
+        cy.get('[data-cy=item_1]').should('have.length', 0);
     })
 
     it('serializes input value to post request body', () => {
         const expectedMessage: String = 'item 1';
-        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelEmpty}).as('getAll');
+        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelEmpty});
         cy.intercept('POST', '/items', {}).as('postItem');
 
         cy.mount(App);
@@ -137,24 +137,22 @@ describe('<App />', () => {
     })
 
     it('appends post response body to list', () => {
-        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelEmpty}).as('getAll');
-        cy.intercept('POST', '/items', {statusCode: 201, body: validRequestBody});
+        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelEmpty});
+        cy.intercept('POST', '/items', {statusCode: 201, body: undoneItem1});
 
         cy.mount(App);
         cy.get('#plus').click();
 
-        cy.get('[data-cy=item]').should(($items) => {
+        cy.get('[data-cy=item_1]').should((item) => {
             // @ts-ignore
-            expect($items).to.have.length(1);
-            // @ts-ignore
-            expect($items.eq(0)).to.contain(validRequestBody.message);
-        })
+            expect(item).to.contain(undoneItem1.message);
+        });
     })
 
     it('clears new-message field on successful creation', () => {
         const expectedEmptyString: String = '';
         cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelEmpty}).as('getAll');
-        cy.intercept('POST', '/items', {statusCode: 201, body: validRequestBody});
+        cy.intercept('POST', '/items', {statusCode: 201, body: undoneItem1});
 
         cy.mount(App);
         cy.get('#new-message').type('bar');
@@ -170,7 +168,7 @@ describe('<App />', () => {
         cy.mount(App);
         cy.get('#delete').click();
 
-        cy.get('[data-cy=item]').should('have.length', 0);
+        cy.get('[data-cy=item_1]').should('have.length', 0);
     })
 
     it('sends delete request that contains the item id', () => {
@@ -219,18 +217,24 @@ describe('<App />', () => {
         cy.mount(App);
 
         cy.get('#checkbox').click()
-        cy.get('[data-cy=item]').should('have.class', 'done');
+        cy.get('[data-cy=item_1]').should('have.class', 'done');
 
         cy.get('#checkbox').click()
-        cy.get('[data-cy=item]').should('not.have.class', 'done');
+        cy.get('[data-cy=item_1]').should('have.class', 'undone');
     })
 
     it('sorts done items to the end of the list', () => {
+        const setDoneUrl: string = collectionModelOneItem._embedded.itemResponseList[0]._links.setToDone.href;
+        const setUndoneUrl: string = collectionModelOneItem._embedded.itemResponseList[0]._links.setToUndone.href;
         cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelTwoItems});
+        cy.intercept('PUT', setDoneUrl, {StatusCode: 200, body: doneItem})
+        cy.intercept('PUT', setUndoneUrl, {StatusCode: 200, body: undoneItem1})
 
         cy.mount(App);
 
-        cy.get('[data-cy=item]').eq(0)
-        cy.get('[data-cy=item]').eq(1)
+        cy.get('[data-cy=item_1]').find('#checkbox').click();
+        cy.get('[data-cy^=item_]').eq(1)
+            .should('have.attr', 'data-cy')
+            .and('equals', 'item_1');
     })
 })
