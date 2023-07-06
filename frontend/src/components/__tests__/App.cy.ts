@@ -5,8 +5,28 @@ import Item from "@/types/Item";
 
 const validRequestBody = {message: "item 1"};
 
-const undoneItem: Item = {
+const undoneItem1: Item = {
     id: 1,
+    message: "test",
+    done: false,
+    _links: {
+        collection: {
+            href: "http://localhost:8082/items"
+        },
+        delete: {
+            href: "http://localhost:8082/items/1"
+        },
+        setToDone: {
+            href: "http://localhost:8082/items/1/done"
+        },
+        setToUndone: {
+            href: "http://localhost:8082/items/1/undone"
+        }
+    }
+}
+
+const undoneItem2: Item = {
+    id: 2,
     message: "test",
     done: false,
     _links: {
@@ -58,7 +78,24 @@ const collectionModelEmpty: collectionModel = {
 const collectionModelOneItem: collectionModel = {
     _embedded: {
         itemResponseList: [
-            undoneItem
+            undoneItem1
+        ]
+    },
+    _links: {
+        self: {
+            href: "http://localemptyCollectionModelst:8082/items"
+        },
+        post: {
+            href: "http://localhost:8082/items"
+        }
+    }
+}
+
+const collectionModelTwoItems: collectionModel = {
+    _embedded: {
+        itemResponseList: [
+            undoneItem1,
+            undoneItem2
         ]
     },
     _links: {
@@ -155,14 +192,14 @@ describe('<App />', () => {
         const expectedSetUndoneUrl: string = collectionModelOneItem._embedded.itemResponseList[0]._links.setToUndone.href;
         cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelOneItem});
         cy.intercept('PUT', expectedSetDoneUrl, {statusCode: 200, body: doneItem}).as('doneRequest');
-        cy.intercept('PUT', expectedSetUndoneUrl, {statusCode: 200, body: undoneItem}).as('undoneRequest');
+        cy.intercept('PUT', expectedSetUndoneUrl, {statusCode: 200, body: undoneItem1}).as('undoneRequest');
 
         cy.mount(App);
 
         cy.get('#checkbox').click();
         cy.wait('@doneRequest').should(result => {
             // @ts-ignore
-            expect(result.request.url).to.equal(undoneItem._links.setToDone.href);
+            expect(result.request.url).to.equal(undoneItem1._links.setToDone.href);
         })
 
         cy.get('#checkbox').click();
@@ -177,7 +214,7 @@ describe('<App />', () => {
         const setUndoneUrl: string = collectionModelOneItem._embedded.itemResponseList[0]._links.setToUndone.href;
         cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelOneItem});
         cy.intercept('PUT', setDoneUrl, {statusCode: 200, body: doneItem});
-        cy.intercept('PUT', setUndoneUrl, {statusCode: 200, body: undoneItem});
+        cy.intercept('PUT', setUndoneUrl, {statusCode: 200, body: undoneItem1});
 
         cy.mount(App);
 
@@ -186,5 +223,14 @@ describe('<App />', () => {
 
         cy.get('#checkbox').click()
         cy.get('[data-cy=item]').should('not.have.class', 'done');
+    })
+
+    it('sorts done items to the end of the list', () => {
+        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelTwoItems});
+
+        cy.mount(App);
+
+        cy.get('[data-cy=item]').eq(0)
+        cy.get('[data-cy=item]').eq(1)
     })
 })

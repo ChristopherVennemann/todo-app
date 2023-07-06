@@ -90,7 +90,7 @@ onUpdated(() => {
       <img id="plus" alt="" class="col-3 align-self-center" src="@/images/plus_white.png" @click="addNewItem"/>
     </div>
 
-    <div id="item-list">
+    <div id="item-list" data-cy="item-list">
       <div v-for="item in items" :key="item.id" :class="{ 'done': item.done, 'undone': !item.done}"
            class="item-box row"
            data-cy="item"
