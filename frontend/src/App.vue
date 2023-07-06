@@ -1,9 +1,7 @@
 <script lang="ts" setup>
 import axios, {AxiosResponse, HttpStatusCode} from "axios";
 import {onMounted, onUpdated, Ref, ref} from "vue";
-import Item from "@/types/Item";
-import CollectionModel from "@/types/CollectionModel";
-import LinkCollection from "@/types/LinkCollection";
+import {CollectionModel, Item, LinkCollection} from "@/types/CollectionModelTypes";
 
 const initialItemLink: string = 'http://localhost:8082/items'
 
@@ -18,10 +16,10 @@ async function getItems(): Promise<CollectionModel> {
 }
 
 function sortByDoneAndId(a: Item, b: Item): number {
-  if (a.done === b.done) {
+  if (a.isDone === b.isDone) {
     return sortById(a, b);
   }
-  if (a.done === true) {
+  if (a.isDone === true) {
     return 1;
   }
   return -1;
@@ -69,6 +67,7 @@ async function setDoneStatus(href: string): Promise<void> {
 
 onMounted(async () => {
   model = await getItems();
+  console.log(model)
   items.value = model?._embedded ? model._embedded.itemResponseList : [];
   endpoints = model._links;
 })
@@ -91,14 +90,14 @@ onUpdated(() => {
     </div>
 
     <div id="item-list" data-cy="item-list">
-      <div v-for="item in items" :key="item.id" :class="{ 'done': item.done, 'undone': !item.done}"
+      <div v-for="item in items" :key="item.id" :class="{ 'done': item.isDone, 'undone': !item.isDone}"
            :data-cy="'item_' + item.id"
            class="item-box row"
       >
         <p class="col align-self-end">{{ item.message }}</p>
-        <img id="delete" alt="" class="col-2 align-self-center" src="@/images/trashcan.png"
+        <img alt="" class="col-2 align-self-center delete" src="@/images/trashcan.png"
              @click="deleteItem(item)"/>
-        <img v-if="item.done" id="checkbox" alt="" class="col-2 align-self-center"
+        <img v-if="item.isDone" id="checkbox" alt="" class="col-2 align-self-center"
              src="@/images/circle_checked_white.png"
              @click="setDoneStatus(item._links.setToUndone.href)"/>
         <img v-else id="checkbox" alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png"
@@ -145,17 +144,13 @@ html {
     }
   }
 
-  #delete {
+  .delete {
     opacity: 0;
   }
 
   &:hover {
     box-shadow: 1px 1px rgba($shadow-color, 0.5);
     background-color: rgba($primary-color, 0.4);
-
-    #delete {
-      opacity: 0.6;
-    }
   }
 }
 
@@ -195,10 +190,6 @@ html {
   display: flex;
   flex-direction: column;
   row-gap: 0.5em;
-
-  p {
-    padding-left: 0.5em;
-  }
 }
 
 </style>
