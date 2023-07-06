@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import axios, {AxiosResponse, HttpStatusCode} from "axios";
-import {onMounted, Ref, ref} from "vue";
+import {onMounted, onUpdated, Ref, ref} from "vue";
 import Item from "@/types/Item";
 import CollectionModel from "@/types/CollectionModel";
 import LinkCollection from "@/types/LinkCollection";
@@ -16,6 +16,21 @@ async function getItems(): Promise<CollectionModel> {
   const response: AxiosResponse = await axios.get(initialItemLink);
   return response.data;
 }
+
+function sortByDoneAndId(a: Item, b: Item): number {
+  if (a.done === b.done) {
+    return sortById(a, b);
+  }
+  if (a.done === true) {
+    return 1;
+  }
+  return -1;
+}
+
+function sortById(a: Item, b: Item): number {
+  return a.id - b.id;
+}
+
 
 async function addNewItem(): Promise<void> {
   const response = await axios.post(
@@ -41,7 +56,6 @@ async function deleteItem(item: Item): Promise<void> {
 }
 
 async function setDoneStatus(href: string): Promise<void> {
-  console.log(items.value);
   const response = await axios.put(href);
   if (response.status === HttpStatusCode.Ok) {
     const updatedItem: Item = response.data;
@@ -51,7 +65,6 @@ async function setDoneStatus(href: string): Promise<void> {
       }
     }
   }
-  console.log(items.value);
 }
 
 onMounted(async () => {
@@ -59,6 +72,10 @@ onMounted(async () => {
   items.value = model?._embedded ? model._embedded.itemResponseList : [];
   endpoints = model._links;
 })
+
+onUpdated(() => {
+  items.value.sort(sortByDoneAndId);
+});
 
 </script>
 
@@ -68,19 +85,20 @@ onMounted(async () => {
 
     <p id="title">to-do :</p>
 
-    <div>
-      <div id="new-item" class="item-box row">
-        <input id="new-message" v-model="newItemMessage" class="col" placeholder=". . . add new item" type="text"/>
-        <img id="plus" alt="" class="col-3 align-self-center" src="@/images/plus_white.png" @click="addNewItem"/>
-      </div>
+    <div id="new-item" class="item-box row">
+      <input id="new-message" v-model="newItemMessage" class="col" placeholder=". . . add new item" type="text"/>
+      <img id="plus" alt="" class="col-3 align-self-center" src="@/images/plus_white.png" @click="addNewItem"/>
     </div>
 
     <div id="item-list">
-      <div v-for="item in items" :key="item.id" class="item-box row" data-cy="item">
+      <div v-for="item in items" :key="item.id" :class="{ 'done': item.done, 'undone': !item.done}"
+           class="item-box row"
+           data-cy="item"
+      >
         <p class="col align-self-end">{{ item.message }}</p>
         <img id="delete" alt="" class="col-2 align-self-center" src="@/images/trashcan.png"
              @click="deleteItem(item)"/>
-        <img v-if="item.done" id="checkbox" alt="" class="col-2 align-self-center done"
+        <img v-if="item.done" id="checkbox" alt="" class="col-2 align-self-center"
              src="@/images/circle_checked_white.png"
              @click="setDoneStatus(item._links.setToUndone.href)"/>
         <img v-else id="checkbox" alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png"
@@ -111,6 +129,10 @@ html {
   background-color: rgba($primary-color, 0.2);
   border-radius: 0.5em;
   font: $font-items;
+
+  &.done {
+    color: rgba(0, 0, 0, 0.3);
+  }
 
   img {
     height: 60px;
