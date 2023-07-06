@@ -182,11 +182,9 @@ describe('<App />', () => {
         cy.mount(App);
 
         cy.get('#checkbox').click()
-        cy.get('#checkbox').should('have.class', 'done');
+        cy.get('[data-cy=item]').should('have.class', 'done');
 
         cy.get('#checkbox').click()
-        cy.get('#checkbox').should('not.have.class', 'done');
+        cy.get('[data-cy=item]').should('not.have.class', 'done');
     })
-
-
 })
