@@ -3,16 +3,22 @@ import axios, {AxiosResponse, HttpStatusCode} from "axios";
 import {onMounted, onUpdated, Ref, ref} from "vue";
 import {CollectionModel, Item, LinkCollection} from "@/types/CollectionModelTypes";
 
+const hateoasUrl: string = 'http://localhost:8082/hateoas'
 
-const initialItemLink: string = 'http://localhost:8082/items'
+let initialHateoasModel: CollectionModel;
 
-let model: CollectionModel;
-let endpoints: LinkCollection;
+let itemModel: CollectionModel;
+let itemEndpoints: LinkCollection;
 const items: Ref<Item[]> = ref([]);
 let newItemMessage: string = '';
 
-async function getItems(): Promise<CollectionModel> {
-  const response: AxiosResponse = await axios.get(initialItemLink);
+async function getHateoasModel(url: string): Promise<CollectionModel> {
+  const response: AxiosResponse = await axios.get(url);
+  return response.data;
+}
+
+async function getItems(url: string): Promise<CollectionModel> {
+  const response: AxiosResponse = await axios.get(url);
   return response.data;
 }
 
@@ -33,7 +39,7 @@ function sortById(a: Item, b: Item): number {
 
 async function addNewItem(): Promise<void> {
   const response = await axios.post(
-      endpoints.post.href,
+      itemEndpoints.post.href,
       {"message": newItemMessage}
   );
 
@@ -67,10 +73,11 @@ async function setDoneStatus(href: string): Promise<void> {
 }
 
 onMounted(async () => {
-  model = await getItems();
-  console.log(model)
-  items.value = model?._embedded ? model._embedded.itemResponseList : [];
-  endpoints = model._links;
+  initialHateoasModel = await getHateoasModel(hateoasUrl);
+
+  itemModel = await getItems(initialHateoasModel._links.itemCollection.href);
+  items.value = itemModel?._embedded ? itemModel._embedded.itemResponseList : [];
+  itemEndpoints = itemModel._links;
 })
 
 onUpdated(() => {
