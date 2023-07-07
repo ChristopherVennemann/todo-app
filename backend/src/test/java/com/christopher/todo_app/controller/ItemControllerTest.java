@@ -165,6 +165,8 @@ class ItemControllerTest {
         when(itemService.setItemToDone(1L))
             .thenReturn(null);
 
+        new ItemResponse(1, null, false);
+
         mockMvc.perform(put(String.format("/items/%d/undone", 1)))
             .andExpect(status().isNoContent())
             .andExpect(jsonPath("$").doesNotExist());

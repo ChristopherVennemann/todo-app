@@ -18,7 +18,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @CrossOrigin
 @RestController
 @RequestMapping("/items")
-
 public class ItemController {
 
     @Autowired
