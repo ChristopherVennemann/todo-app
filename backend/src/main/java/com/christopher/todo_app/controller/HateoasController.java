@@ -16,6 +16,7 @@ public class HateoasController {
     @ResponseStatus(HttpStatus.OK)
     public HateoasStarter getStarterLinks() {
         final HateoasStarter starter = new HateoasStarter();
+        starter.add(linkTo(methodOn(HateoasController.class).getStarterLinks()).withSelfRel());
         starter.add(linkTo(methodOn(ItemController.class).getItems()).withRel("itemCollection"));
         return starter;
     }

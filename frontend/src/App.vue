@@ -5,7 +5,7 @@ import {CollectionModel, Item, LinkCollection} from "@/types/CollectionModelType
 
 const hateoasUrl: string = 'http://localhost:8082/hateoas'
 
-let initialHateoasModel: CollectionModel;
+let hateoasModel: CollectionModel;
 
 let itemModel: CollectionModel;
 let itemEndpoints: LinkCollection;
@@ -73,9 +73,9 @@ async function setDoneStatus(href: string): Promise<void> {
 }
 
 onMounted(async () => {
-  initialHateoasModel = await getHateoasModel(hateoasUrl);
+  hateoasModel = await getHateoasModel(hateoasUrl);
 
-  itemModel = await getItems(initialHateoasModel._links.itemCollection.href);
+  itemModel = await getItems(hateoasModel._links.itemCollection.href);
   items.value = itemModel?._embedded ? itemModel._embedded.itemResponseList : [];
   itemEndpoints = itemModel._links;
 })

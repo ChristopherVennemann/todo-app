@@ -23,7 +23,7 @@ export class TestData {
         };
     }
 
-    public static generateCollectionModel(items?: Item[]): CollectionModel {
+    public static generateItemModel(items?: Item[]): CollectionModel {
         if (items) {
             return {
                 _embedded: {
@@ -31,7 +31,7 @@ export class TestData {
                 },
                 _links: {
                     self: {
-                        href: "http://localhost:8082/items" // This one is hardcoded in the frontend
+                        href: "http://localhost:0/items"
                     },
                     post: {
                         href: "http://localhost:0/post_item"
@@ -42,13 +42,26 @@ export class TestData {
             return {
                 _links: {
                     self: {
-                        href: "http://localhost:8082/items" // This one too FIX REDUNDANCY!
+                        href: "http://localhost:0/items"
                     },
                     post: {
                         href: "http://localhost:0/post_item"
                     }
                 }
             };
+        }
+    }
+
+    public static generateHateoasModel(): CollectionModel {
+        return {
+            _links: {
+                self: {
+                    href: "http://localhost:8082/hateoas" // This one is hardcoded in the frontend
+                },
+                itemCollection: {
+                    href: "http://localhost:0/items"
+                }
+            }
         }
     }
 
