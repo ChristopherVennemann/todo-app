@@ -3,6 +3,7 @@ import axios, {AxiosResponse, HttpStatusCode} from "axios";
 import {onMounted, onUpdated, Ref, ref} from "vue";
 import {CollectionModel, Item, LinkCollection} from "@/types/CollectionModelTypes";
 
+
 const initialItemLink: string = 'http://localhost:8082/items'
 
 let model: CollectionModel;

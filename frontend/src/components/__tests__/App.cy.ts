@@ -1,130 +1,34 @@
 // @ts-ignore
 import App from "../../App.vue";
-import collectionModel from "@/types/CollectionModel";
-import Item from "@/types/Item";
+import {CollectionModel, Item} from "@/types/CollectionModelTypes";
+import {TestData} from "../../../test/TestData";
 
-const validRequestBody = {message: "item 1"};
+// Tests are flaky as heck
 
-const undoneItem1: Item = {
-    id: 1,
-    message: "test",
-    done: false,
-    _links: {
-        collection: {
-            href: "http://localhost:8082/items"
-        },
-        delete: {
-            href: "http://localhost:8082/items/1"
-        },
-        setToDone: {
-            href: "http://localhost:8082/items/1/done"
-        },
-        setToUndone: {
-            href: "http://localhost:8082/items/1/undone"
-        }
-    }
-}
-
-const undoneItem2: Item = {
-    id: 2,
-    message: "test",
-    done: false,
-    _links: {
-        collection: {
-            href: "http://localhost:8082/items"
-        },
-        delete: {
-            href: "http://localhost:8082/items/1"
-        },
-        setToDone: {
-            href: "http://localhost:8082/items/1/done"
-        },
-        setToUndone: {
-            href: "http://localhost:8082/items/1/undone"
-        }
-    }
-}
-
-const doneItem: Item = {
-    id: 1,
-    message: "test",
-    done: true,
-    _links: {
-        collection: {
-            href: "http://localhost:8082/items"
-        },
-        delete: {
-            href: "http://localhost:8082/items/1"
-        },
-        setToDone: {
-            href: "http://localhost:8082/items/1/done"
-        },
-        setToUndone: {
-            href: "http://localhost:8082/items/1/undone"
-        }
-    }
-}
-
-const collectionModelEmpty: collectionModel = {
-    _links: {
-        self: {
-            href: "http://localemptyCollectionModelst:8082/items"
-        },
-        post: {
-            href: "http://localhost:8082/items"
-        }
-    }
-}
-const collectionModelOneItem: collectionModel = {
-    _embedded: {
-        itemResponseList: [
-            undoneItem1
-        ]
-    },
-    _links: {
-        self: {
-            href: "http://localemptyCollectionModelst:8082/items"
-        },
-        post: {
-            href: "http://localhost:8082/items"
-        }
-    }
-}
-
-const collectionModelTwoItems: collectionModel = {
-    _embedded: {
-        itemResponseList: [
-            undoneItem1,
-            undoneItem2
-        ]
-    },
-    _links: {
-        self: {
-            href: "http://localemptyCollectionModelst:8082/items"
-        },
-        post: {
-            href: "http://localhost:8082/items"
-        }
-    }
-}
+// TODO: set types, const
+// TODO: also was jetzt, ganze url oder nur path? fuer die fixe brauchen wir den path;
+//  am besten wohl, wir uebergeben die url im frontend
 
 describe('<App />', () => {
     it('renders', () => {
-        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelEmpty});
         cy.mount(App);
     })
 
-    it('has no initial items', () => {
-        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelEmpty});
+    it('shows initial items', () => {
+        const item: Item = TestData.generateItem(1, "test", false)
+        const model: CollectionModel = TestData.generateCollectionModel([item]);
+        cy.intercept('GET', TestData.pathFrom(model._links.self.href), {statusCode: 200, body: model});
 
         cy.mount(App);
-        cy.get('[data-cy=item_1]').should('have.length', 0);
+
+        cy.get('[data-cy^=item_]').should('have.length', 1);
     })
 
     it('serializes input value to post request body', () => {
+        const emptyModel: CollectionModel = TestData.generateCollectionModel();
         const expectedMessage: String = 'item 1';
-        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelEmpty});
-        cy.intercept('POST', '/items', {}).as('postItem');
+        cy.intercept('GET', emptyModel._links.self.href, {statusCode: 200, body: emptyModel});
+        cy.intercept('POST', emptyModel._links.post.href, {}).as('postItem');
 
         cy.mount(App);
         cy.get('#new-message').type(expectedMessage);
@@ -137,8 +41,10 @@ describe('<App />', () => {
     })
 
     it('appends post response body to list', () => {
-        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelEmpty});
-        cy.intercept('POST', '/items', {statusCode: 201, body: undoneItem1});
+        const undoneItem1 = TestData.generateItem(1, "test", false);
+        const emptyModel: CollectionModel = TestData.generateCollectionModel();
+        cy.intercept('GET', TestData.pathFrom(emptyModel._links.self.href), {statusCode: 200, body: emptyModel});
+        cy.intercept('POST', TestData.pathFrom(emptyModel._links.post.href), {statusCode: 201, body: undoneItem1});
 
         cy.mount(App);
         cy.get('#plus').click();
@@ -150,9 +56,14 @@ describe('<App />', () => {
     })
 
     it('clears new-message field on successful creation', () => {
+        const emptyModel = TestData.generateCollectionModel();
+        const undoneItem1 = TestData.generateItem(1, "test", false)
         const expectedEmptyString: String = '';
-        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelEmpty}).as('getAll');
-        cy.intercept('POST', '/items', {statusCode: 201, body: undoneItem1});
+        cy.intercept('GET', TestData.pathFrom(emptyModel._links.self.href), {
+            statusCode: 200,
+            body: emptyModel
+        }).as('getAll');
+        cy.intercept('POST', TestData.pathFrom(emptyModel._links.post.href), {statusCode: 201, body: undoneItem1});
 
         cy.mount(App);
         cy.get('#new-message').type('bar');
@@ -162,60 +73,59 @@ describe('<App />', () => {
     })
 
     it('deletes the item when delete button is clicked', () => {
-        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelOneItem});
-        cy.intercept('DELETE', '/items/**', {statusCode: 204}).as('deleteRequest');
+        const item: Item = TestData.generateItem(1, "test", false);
+        const model: CollectionModel = TestData.generateCollectionModel([item])
+        cy.intercept('GET', TestData.pathFrom(model._links.self.href), {statusCode: 200, body: model});
+        cy.intercept('DELETE', TestData.pathFrom(item._links.delete.href), {statusCode: 204}).as('deleteRequest');
 
         cy.mount(App);
-        cy.get('#delete').click();
+        cy.get('.delete').click();
 
         cy.get('[data-cy=item_1]').should('have.length', 0);
     })
 
-    it('sends delete request that contains the item id', () => {
-        const expectedDeleteUrl: string = collectionModelOneItem._embedded.itemResponseList[0]._links.delete.href;
-        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelOneItem});
-        cy.intercept('DELETE', '/items/**', {statusCode: 204}).as('deleteRequest');
-
-        cy.mount(App);
-        cy.get('#delete').click();
-
-        cy.wait('@deleteRequest').should(deleteRequest => {
-            // @ts-ignore
-            expect(deleteRequest.request.url).to.equal(expectedDeleteUrl);
-        })
-    })
-
     it('changes item status when done-checkbox is clicked', () => {
-        const expectedSetDoneUrl: string = collectionModelOneItem._embedded.itemResponseList[0]._links.setToDone.href;
-        const expectedSetUndoneUrl: string = collectionModelOneItem._embedded.itemResponseList[0]._links.setToUndone.href;
-        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelOneItem});
-        cy.intercept('PUT', expectedSetDoneUrl, {statusCode: 200, body: doneItem}).as('doneRequest');
-        cy.intercept('PUT', expectedSetUndoneUrl, {statusCode: 200, body: undoneItem1}).as('undoneRequest');
+        const undoneItem: Item = TestData.generateItem(1, "test", false);
+        const doneItem: Item = TestData.generateItem(1, "test", true);
+        const model = TestData.generateCollectionModel([undoneItem])
+        const setToDoneUrl = undoneItem._links.setToDone.href;
+        const setToUndoneUrl = doneItem._links.setToUndone.href;
+        cy.intercept('GET', model._links.self.href, {statusCode: 200, body: model});
+        cy.intercept('PUT', setToDoneUrl, {
+            statusCode: 200,
+            body: doneItem
+        }).as('doneRequest');
+        cy.intercept('PUT', setToUndoneUrl, {
+            statusCode: 200,
+            body: undoneItem
+        }).as('undoneRequest');
 
         cy.mount(App);
 
         cy.get('#checkbox').click();
         cy.wait('@doneRequest').should(result => {
             // @ts-ignore
-            expect(result.request.url).to.equal(undoneItem1._links.setToDone.href);
+            expect(result.request.url).to.equal(setToDoneUrl);
         })
 
         cy.get('#checkbox').click();
         cy.wait('@undoneRequest').should(result => {
             // @ts-ignore
-            expect(result.request.url).to.equal(doneItem._links.setToUndone.href);
+            expect(result.request.url).to.equal(setToUndoneUrl);
         })
     })
 
     it('updates item list after done status change', () => {
-        const setDoneUrl: string = collectionModelOneItem._embedded.itemResponseList[0]._links.setToDone.href;
-        const setUndoneUrl: string = collectionModelOneItem._embedded.itemResponseList[0]._links.setToUndone.href;
-        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelOneItem});
+        const undoneItem: Item = TestData.generateItem(1, "test", false);
+        const doneItem: Item = TestData.generateItem(1, "test", true);
+        const model: CollectionModel = TestData.generateCollectionModel([undoneItem])
+        const setDoneUrl: string = undoneItem._links.setToDone.href;
+        const setUndoneUrl: string = doneItem._links.setToUndone.href;
+        cy.intercept('GET', '/items', {statusCode: 200, body: model});
         cy.intercept('PUT', setDoneUrl, {statusCode: 200, body: doneItem});
-        cy.intercept('PUT', setUndoneUrl, {statusCode: 200, body: undoneItem1});
+        cy.intercept('PUT', setUndoneUrl, {statusCode: 200, body: undoneItem});
 
         cy.mount(App);
-
         cy.get('#checkbox').click()
         cy.get('[data-cy=item_1]').should('have.class', 'done');
 
@@ -224,15 +134,19 @@ describe('<App />', () => {
     })
 
     it('sorts done items to the end of the list', () => {
-        const setDoneUrl: string = collectionModelOneItem._embedded.itemResponseList[0]._links.setToDone.href;
-        const setUndoneUrl: string = collectionModelOneItem._embedded.itemResponseList[0]._links.setToUndone.href;
-        cy.intercept('GET', '/items', {statusCode: 200, body: collectionModelTwoItems});
-        cy.intercept('PUT', setDoneUrl, {StatusCode: 200, body: doneItem})
-        cy.intercept('PUT', setUndoneUrl, {StatusCode: 200, body: undoneItem1})
+        const undoneItem1: Item = TestData.generateItem(1, "test", false);
+        const doneItem1: Item = TestData.generateItem(1, "test", true);
+        const undoneItem2: Item = TestData.generateItem(2, "test", false);
+        const model: CollectionModel = TestData.generateCollectionModel([undoneItem1, undoneItem2]);
+        const setDoneUrl: string = undoneItem1._links.setToDone.href;
+        const setUndoneUrl: string = doneItem1._links.setToUndone.href;
+        cy.intercept('GET', '/items', {statusCode: 200, body: model});
+        cy.intercept('PUT', setDoneUrl, {StatusCode: 200, body: doneItem1});
+        cy.intercept('PUT', setUndoneUrl, {StatusCode: 200, body: undoneItem1});
 
         cy.mount(App);
-
         cy.get('[data-cy=item_1]').find('#checkbox').click();
+
         cy.get('[data-cy^=item_]').eq(1)
             .should('have.attr', 'data-cy')
             .and('equals', 'item_1');
