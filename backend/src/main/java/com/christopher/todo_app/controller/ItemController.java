@@ -18,7 +18,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @CrossOrigin
 @RestController
 @RequestMapping("/items")
-
 public class ItemController {
 
     @Autowired
@@ -27,6 +26,8 @@ public class ItemController {
     private static ItemResponse addLinks(ItemResponse item) {
         item.add(linkTo(methodOn(ItemController.class).getItems()).withRel(IanaLinkRelations.COLLECTION));
         item.add(linkTo(methodOn(ItemController.class).deleteItem(item.getId())).withRel("delete"));
+        item.add(linkTo(methodOn(ItemController.class).setItemToDone(item.getId())).withRel("setToDone"));
+        item.add(linkTo(methodOn(ItemController.class).setItemToUndone(item.getId())).withRel("setToUndone"));
         return item;
     }
 
@@ -58,5 +59,23 @@ public class ItemController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/{id}/done")
+    public ResponseEntity<ItemResponse> setItemToDone(@PathVariable Long id) {
+        ItemResponse response = itemService.setItemToDone(id);
+        if (response == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(addLinks(response), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/undone")
+    public ResponseEntity<ItemResponse> setItemToUndone(@PathVariable Long id) {
+        ItemResponse response = itemService.setItemToUndone(id);
+        if (response == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(addLinks(response), HttpStatus.OK);
     }
 }

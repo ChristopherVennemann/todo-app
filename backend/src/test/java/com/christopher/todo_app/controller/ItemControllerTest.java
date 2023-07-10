@@ -35,9 +35,9 @@ class ItemControllerTest {
     @DisplayName("GET /items - returns OK and list of all items")
     void getItemsShouldReturnListOfAllItems() throws Exception {
         final List<ItemResponse> expectedList = List.of(
-            new ItemResponse(1L, "item 1"),
-            new ItemResponse(2L, "item 2"),
-            new ItemResponse(3L, "item 3")
+            new ItemResponse(1L, "item 1", false),
+            new ItemResponse(2L, "item 2", false),
+            new ItemResponse(3L, "item 3", false)
         );
         when(itemService.getItems()).thenReturn(expectedList);
 
@@ -60,7 +60,7 @@ class ItemControllerTest {
             {
                 "message": "item 1"
             }""";
-        final ItemResponse expectedItem = new ItemResponse(1L, "item 1");
+        final ItemResponse expectedItem = new ItemResponse(1L, "item 1", false);
 
         when(itemService.saveItem(any()))
             .thenReturn(expectedItem);
@@ -120,5 +120,55 @@ class ItemControllerTest {
 
         mockMvc.perform(delete(String.format("/items/%d", deleteId)))
             .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("PUT /items/{id}/done - should return OK and item with isDone==true for existing id")
+    void shouldReturnOKAndDoneItemForExistingId() throws Exception {
+        final ItemResponse expectedItem = new ItemResponse(1L, "test", true);
+
+        when(itemService.setItemToDone(expectedItem.getId()))
+            .thenReturn(expectedItem);
+
+        mockMvc.perform(put(String.format("/items/%d/done", expectedItem.getId())))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.isDone", is(expectedItem.isDone())));
+    }
+
+    @Test
+    @DisplayName("PUT /items/{id}/done - should return NO_CONTENT and empty body for non-existing id")
+    void shouldReturnNO_CONTENTAndEmptyBodyForDoneOnNonExistingId() throws Exception {
+        when(itemService.setItemToDone(1L))
+            .thenReturn(null);
+
+        mockMvc.perform(put(String.format("/items/%d/done", 1)))
+            .andExpect(status().isNoContent())
+            .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    @DisplayName("PUT /items/{id}/undone - should return OK and item with isDone==false for existing id")
+    void shouldReturnOKAndUndoneItemForExistingId() throws Exception {
+        final ItemResponse expectedItem = new ItemResponse(1L, "test", false);
+
+        when(itemService.setItemToUndone(expectedItem.getId()))
+            .thenReturn(expectedItem);
+
+        mockMvc.perform(put(String.format("/items/%d/undone", expectedItem.getId())))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.isDone", is(expectedItem.isDone())));
+    }
+
+    @Test
+    @DisplayName("PUT /items/{id}/done - should return NO_CONTENT and empty body for non-existing id")
+    void shouldReturnNO_CONTENTAndEmptyBodyForNonExistingId() throws Exception {
+        when(itemService.setItemToDone(1L))
+            .thenReturn(null);
+
+        new ItemResponse(1L, "test", false);
+
+        mockMvc.perform(put(String.format("/items/%d/undone", 1)))
+            .andExpect(status().isNoContent())
+            .andExpect(jsonPath("$").doesNotExist());
     }
 }

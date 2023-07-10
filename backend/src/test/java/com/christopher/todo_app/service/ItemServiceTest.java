@@ -12,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,8 +30,8 @@ public class ItemServiceTest {
     @Test
     @DisplayName("Should return list of all Items")
     public void shouldReturnItemList() {
-        final Item expectedItem1 = new Item(1L, "item1");
-        final Item expectedItem2 = new Item(2L, "item2");
+        final Item expectedItem1 = new Item(1L, "item1", false);
+        final Item expectedItem2 = new Item(2L, "item2", false);
         final List<Item> expectedList = Arrays.asList(
             expectedItem1,
             expectedItem2
@@ -48,8 +49,8 @@ public class ItemServiceTest {
     @Test
     @DisplayName("Should save an Item and return it")
     public void shouldSaveItemAndReturnIt() {
-        final ItemResponse initialItem = new ItemResponse(null, "item1");
-        final ItemResponse expectedItem = new ItemResponse(1L, "item1");
+        final ItemResponse initialItem = new ItemResponse(null, "item1", false);
+        final ItemResponse expectedItem = new ItemResponse(1L, "item1", false);
         when(itemRepository.save(any(Item.class))).thenReturn(Item.of(expectedItem));
 
         ItemResponse actualItem = itemService.saveItem(initialItem);
@@ -65,9 +66,9 @@ public class ItemServiceTest {
         final long deleteId = 1L;
         when(itemRepository.existsById(1L)).thenReturn(true);
 
-        final boolean wasSuccessful = itemService.deleteItem(deleteId);
+        final boolean wasDeleted = itemService.deleteItem(deleteId);
 
-        assertThat(wasSuccessful).isTrue();
+        assertThat(wasDeleted).isTrue();
     }
 
     @Test
@@ -76,8 +77,54 @@ public class ItemServiceTest {
         final long deleteId = 2L;
         when(itemRepository.existsById(2L)).thenReturn(false);
 
-        final boolean wasSuccessful = itemService.deleteItem(deleteId);
+        final boolean wasDeleted = itemService.deleteItem(deleteId);
 
-        assertThat(wasSuccessful).isFalse();
+        assertThat(wasDeleted).isFalse();
+    }
+
+    @Test
+    @DisplayName("Should return item with isDone==true if Id exists")
+    public void shouldReturnDoneItemForSetItemToDoneIfIdExists() {
+        final long updateId = 1L;
+        ItemResponse expectedItem = new ItemResponse(updateId, "test", true);
+        when(itemRepository.findById(updateId)).thenReturn(Optional.of(Item.of(expectedItem)));
+
+        final ItemResponse actualItem = itemService.setItemToDone(updateId);
+
+        assertThat(actualItem.isDone()).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should return null for setItemToDone if Id doesn't exists")
+    public void shouldReturnNullForSetItemToDoneIfIdDoesntExist() {
+        final long updateId = 1L;
+        when(itemRepository.findById(updateId)).thenReturn(Optional.empty());
+
+        final ItemResponse actualItem = itemService.setItemToDone(updateId);
+
+        assertThat(actualItem).isNull();
+    }
+
+    @Test
+    @DisplayName("Should return item with isDone==false if Id exists")
+    public void shouldReturnUndoneItemForSetItemToUndoneIfIdExists() {
+        final long updateId = 1L;
+        ItemResponse expectedItem = new ItemResponse(updateId, "test", false);
+        when(itemRepository.findById(updateId)).thenReturn(Optional.of(Item.of(expectedItem)));
+
+        final ItemResponse actualItem = itemService.setItemToUndone(updateId);
+
+        assertThat(actualItem.isDone()).isFalse();
+    }
+
+    @Test
+    @DisplayName("Should return null for setItemToDone if Id doesn't exists")
+    public void shouldReturnNullForSetItemToUndoneIfIdDoesntExist() {
+        final long updateId = 1L;
+        when(itemRepository.findById(updateId)).thenReturn(Optional.empty());
+
+        final ItemResponse actualItem = itemService.setItemToUndone(updateId);
+
+        assertThat(actualItem).isNull();
     }
 }

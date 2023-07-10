@@ -50,7 +50,7 @@ class BackendApplicationTests {
             {
                 "message": "item 1"
             }""";
-        final ItemResponse expectedItem = new ItemResponse(1L, "item 1");
+        final ItemResponse expectedItem = new ItemResponse(1L, "item 1", false);
 
         RequestBuilder request = MockMvcRequestBuilders
             .post("/items")
@@ -87,8 +87,8 @@ class BackendApplicationTests {
     @DisplayName("DELETE /items/{id} - should return NO_CONTENT and delete the item for valid request")
     void shouldReturnStatusNoContent204ForValidDelete() throws Exception {
         final List<ItemResponse> expectedItems = List.of(
-            new ItemResponse(null, "item1"),
-            new ItemResponse(null, "item2")
+            new ItemResponse(null, "item1", false),
+            new ItemResponse(null, "item2", false)
         );
         final String deletePath = "/items/1";
 
@@ -114,8 +114,8 @@ class BackendApplicationTests {
     @DisplayName("DELETE /items/{id} - should return NOT_FOUND and not delete items for invalid request")
     void shouldReturnStatusNotFound404ForValidDelete() throws Exception {
         final List<ItemResponse> expectedItems = List.of(
-            new ItemResponse(null, "item1"),
-            new ItemResponse(null, "item2")
+            new ItemResponse(null, "item1", false),
+            new ItemResponse(null, "item2", false)
         );
         final String deletePath = "/items/3";
 
@@ -133,5 +133,67 @@ class BackendApplicationTests {
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/items"))
             .andExpect(jsonPath("$._embedded.itemResponseList", hasSize(2)));
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("PUT /items/{id}/done - Should return Status OK and item with isDone==true for valid request")
+    void shouldReturnStatusOkAndDoneItemValidSetDoneRequest() throws Exception {
+        @Language("json") final String postRequestBody = """
+            {
+                "message": "test"
+            }""";
+
+        mockMvc.perform(MockMvcRequestBuilders
+            .post("/items")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(postRequestBody));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .put("/items/1/done"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.isDone", is(true)));
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("PUT /items/{id}/done - Should return Status NO_Content and no body for invalid request")
+    void shouldReturnStatusNoContentAndNoBodyForInvalidSetDoneRequest() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .put("/items/1/done"))
+            .andExpect(status().isNoContent())
+            .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("PUT /items/{id}/undone - Should return Status OK and item with isDone==false for valid request")
+    void shouldReturnStatusOkAndUnoneItemValidSetUndoneRequest() throws Exception {
+        @Language("json") final String postRequestBody = """
+            {
+                "message": "test"
+            }""";
+
+        mockMvc.perform(MockMvcRequestBuilders
+            .post("/items")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(postRequestBody));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .put("/items/1/undone"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.isDone", is(false)));
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("PUT /items/{id}/undone - Should return Status NO_Content and no body for invalid request")
+    void shouldReturnStatusNoContentAndNoBodyForInvalidSetUndoneRequest() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .put("/items/1/undone"))
+            .andExpect(status().isNoContent())
+            .andExpect(jsonPath("$").doesNotExist());
     }
 }
