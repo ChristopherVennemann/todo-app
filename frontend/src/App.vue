@@ -6,9 +6,9 @@ import {CollectionModel, Item, LinkCollection} from "@/types/CollectionModelType
 const hateoasUrl: string = 'http://localhost:8082/hateoas'
 
 let hateoasModel: CollectionModel;
-
 let itemModel: CollectionModel;
 let itemEndpoints: LinkCollection;
+
 const items: Ref<Item[]> = ref([]);
 let newItemMessage: string = '';
 
@@ -24,7 +24,7 @@ async function getItems(url: string): Promise<CollectionModel> {
 
 function sortByDoneAndId(a: Item, b: Item): number {
   if (a.isDone === b.isDone) {
-    return sortById(a, b);
+    return a.id - b.id;
   }
   if (a.isDone === true) {
     return 1;
@@ -32,13 +32,8 @@ function sortByDoneAndId(a: Item, b: Item): number {
   return -1;
 }
 
-function sortById(a: Item, b: Item): number {
-  return a.id - b.id;
-}
-
-
 async function addNewItem(): Promise<void> {
-  const response = await axios.post(
+  const response: AxiosResponse = await axios.post(
       itemEndpoints.post.href,
       {"message": newItemMessage}
   );
@@ -50,7 +45,7 @@ async function addNewItem(): Promise<void> {
 }
 
 async function deleteItem(item: Item): Promise<void> {
-  const response = await axios.delete(item._links.delete.href);
+  const response: AxiosResponse = await axios.delete(item._links.delete.href);
   if (response.status == HttpStatusCode.NoContent) {
     for (let i = 0; i < items.value.length; i++) {
       if (items.value[i].id == item.id) {
@@ -60,22 +55,23 @@ async function deleteItem(item: Item): Promise<void> {
   }
 }
 
-async function setDoneStatus(href: string): Promise<void> {
-  const response = await axios.put(href);
-  if (response.status === HttpStatusCode.Ok) {
-    const updatedItem: Item = response.data;
-    for (let i = 0; i < items.value.length; i++) {
-      if (items.value[i].id == updatedItem.id) {
-        items.value[i] = updatedItem;
-      }
+async function setDoneStatus(url: string): Promise<void> {
+  const response: AxiosResponse = await axios.put(url);
+  if (response.status !== HttpStatusCode.Ok) {
+    return;
+  }
+  const updatedItem: Item = response.data;
+  for (let i = 0; i < items.value.length; i++) {
+    if (items.value[i].id == updatedItem.id) {
+      items.value[i] = updatedItem;
     }
   }
 }
 
 onMounted(async () => {
   hateoasModel = await getHateoasModel(hateoasUrl);
-
   itemModel = await getItems(hateoasModel._links.itemCollection.href);
+
   items.value = itemModel?._embedded ? itemModel._embedded.itemResponseList : [];
   itemEndpoints = itemModel._links;
 })
@@ -83,11 +79,9 @@ onMounted(async () => {
 onUpdated(() => {
   items.value.sort(sortByDoneAndId);
 });
-
 </script>
 
 <template>
-
   <div id="app-container">
 
     <p id="title">to-do :</p>
@@ -138,7 +132,7 @@ html {
   font: $font-items;
 
   &.done {
-    color: rgba(0, 0, 0, 0.3);
+    opacity: 0.3;
   }
 
   img {
@@ -199,5 +193,4 @@ html {
   flex-direction: column;
   row-gap: 0.5em;
 }
-
 </style>

@@ -32,13 +32,11 @@ describe('<App />', () => {
         cy.mount(App);
 
         cy.wait('@getHateoas').should((result) => {
-            // console.log('hateoas req', result);
             // @ts-ignore
             expect(result.request.url).to.equal(hateoas._links.self.href);
         });
 
         cy.wait('@getItems').should((result) => {
-            // console.log('get items req', result);
             // @ts-ignore
             expect(result.request.url).to.equal(itemModel._links.self.href);
         })
