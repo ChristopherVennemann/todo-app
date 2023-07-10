@@ -1,25 +1,40 @@
 <script lang="ts" setup>
 import axios, {AxiosResponse, HttpStatusCode} from "axios";
-import {onMounted, Ref, ref} from "vue";
-import Item from "@/types/Item";
-import CollectionModel from "@/types/CollectionModel";
-import LinkCollection from "@/types/LinkCollection";
+import {onMounted, onUpdated, Ref, ref} from "vue";
+import {CollectionModel, Item, LinkCollection} from "@/types/CollectionModelTypes";
 
-const initialItemLink: string = 'http://localhost:8082/items'
+const hateoasUrl: string = 'http://localhost:8082/hateoas'
 
-let model: CollectionModel;
-let endpoints: LinkCollection;
+let hateoasModel: CollectionModel;
+let itemModel: CollectionModel;
+let itemEndpoints: LinkCollection;
+
 const items: Ref<Item[]> = ref([]);
 let newItemMessage: string = '';
 
-async function getItems(): Promise<CollectionModel> {
-  const response: AxiosResponse = await axios.get(initialItemLink);
+async function getHateoasModel(url: string): Promise<CollectionModel> {
+  const response: AxiosResponse = await axios.get(url);
   return response.data;
 }
 
+async function getItems(url: string): Promise<CollectionModel> {
+  const response: AxiosResponse = await axios.get(url);
+  return response.data;
+}
+
+function sortByDoneAndId(a: Item, b: Item): number {
+  if (a.isDone === b.isDone) {
+    return a.id - b.id;
+  }
+  if (a.isDone === true) {
+    return 1;
+  }
+  return -1;
+}
+
 async function addNewItem(): Promise<void> {
-  const response = await axios.post(
-      endpoints.post.href,
+  const response: AxiosResponse = await axios.post(
+      itemEndpoints.post.href,
       {"message": newItemMessage}
   );
 
@@ -30,7 +45,7 @@ async function addNewItem(): Promise<void> {
 }
 
 async function deleteItem(item: Item): Promise<void> {
-  const response = await axios.delete(item._links.delete.href);
+  const response: AxiosResponse = await axios.delete(item._links.delete.href);
   if (response.status == HttpStatusCode.NoContent) {
     for (let i = 0; i < items.value.length; i++) {
       if (items.value[i].id == item.id) {
@@ -40,34 +55,55 @@ async function deleteItem(item: Item): Promise<void> {
   }
 }
 
+async function setDoneStatus(url: string): Promise<void> {
+  const response: AxiosResponse = await axios.put(url);
+  if (response.status !== HttpStatusCode.Ok) {
+    return;
+  }
+  const updatedItem: Item = response.data;
+  for (let i = 0; i < items.value.length; i++) {
+    if (items.value[i].id == updatedItem.id) {
+      items.value[i] = updatedItem;
+    }
+  }
+}
+
 onMounted(async () => {
-  model = await getItems();
-  console.log(model)
-  items.value = model?._embedded ? model._embedded.itemResponseList : [];
-  endpoints = model._links;
+  hateoasModel = await getHateoasModel(hateoasUrl);
+  itemModel = await getItems(hateoasModel._links.itemCollection.href);
+
+  items.value = itemModel?._embedded ? itemModel._embedded.itemResponseList : [];
+  itemEndpoints = itemModel._links;
 })
 
+onUpdated(() => {
+  items.value.sort(sortByDoneAndId);
+});
 </script>
 
 <template>
-
   <div id="app-container">
 
     <p id="title">to-do :</p>
 
-    <div>
-      <div id="new-item" class="item-box row">
-        <input id="new-message" v-model="newItemMessage" class="col" placeholder=". . . add new item" type="text"/>
-        <img id="plus" alt="" class="col-3 align-self-center" src="@/images/plus_white.png" @click="addNewItem"/>
-      </div>
+    <div id="new-item" class="item-box row">
+      <input id="new-message" v-model="newItemMessage" class="col" placeholder=". . . add new item" type="text"/>
+      <img id="plus" alt="" class="col-3 align-self-center" src="@/images/plus_white.png" @click="addNewItem"/>
     </div>
 
-    <div id="item-list">
-      <div v-for="item in items" :key="item.id" class="item-box row" data-cy="item">
+    <div id="item-list" data-cy="item-list">
+      <div v-for="item in items" :key="item.id" :class="{ 'done': item.isDone, 'undone': !item.isDone}"
+           :data-cy="'item_' + item.id"
+           class="item-box row"
+      >
         <p class="col align-self-end">{{ item.message }}</p>
-        <img id="delete" alt="" class="col-2 align-self-center" src="@/images/trashcan.png"
+        <img alt="" class="col-2 align-self-center delete" src="@/images/trashcan.png"
              @click="deleteItem(item)"/>
-        <img alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png"/>
+        <img v-if="item.isDone" id="checkbox" alt="" class="col-2 align-self-center"
+             src="@/images/circle_checked_white.png"
+             @click="setDoneStatus(item._links.setToUndone.href)"/>
+        <img v-else id="checkbox" alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png"
+             @click="setDoneStatus(item._links.setToDone.href)"/>
       </div>
 
     </div>
@@ -95,6 +131,10 @@ html {
   border-radius: 0.5em;
   font: $font-items;
 
+  &.done {
+    opacity: 0.3;
+  }
+
   img {
     height: 60px;
     width: auto;
@@ -106,17 +146,13 @@ html {
     }
   }
 
-  #delete {
+  .delete {
     opacity: 0;
   }
 
   &:hover {
     box-shadow: 1px 1px rgba($shadow-color, 0.5);
     background-color: rgba($primary-color, 0.4);
-
-    #delete {
-      opacity: 0.6;
-    }
   }
 }
 
@@ -156,10 +192,5 @@ html {
   display: flex;
   flex-direction: column;
   row-gap: 0.5em;
-
-  p {
-    padding-left: 0.5em;
-  }
 }
-
 </style>
