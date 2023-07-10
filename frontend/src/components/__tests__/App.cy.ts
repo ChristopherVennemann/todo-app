@@ -3,8 +3,6 @@ import App from "../../App.vue";
 import {CollectionModel, Item} from "@/types/CollectionModelTypes";
 import {TestData} from "../../../test/TestData";
 
-// Tests are flaky as heck
-
 describe('<App />', () => {
     it('renders', () => {
         cy.mount(App);
@@ -58,7 +56,7 @@ describe('<App />', () => {
         cy.intercept('GET', hateoas._links.itemCollection.href, {statusCode: 200, body: emptyModel});
 
         const undoneItem1 = TestData.generateItem(1, "test", false);
-        cy.intercept('POST', TestData.pathFrom(emptyModel._links.post.href), {statusCode: 201, body: undoneItem1});
+        cy.intercept('POST', emptyModel._links.post.href, {statusCode: 201, body: undoneItem1});
 
         cy.mount(App);
         cy.get('#plus').click();
@@ -78,7 +76,7 @@ describe('<App />', () => {
 
         const undoneItem1 = TestData.generateItem(1, "test", false)
         const expectedEmptyString: String = '';
-        cy.intercept('POST', TestData.pathFrom(emptyModel._links.post.href), {statusCode: 201, body: undoneItem1});
+        cy.intercept('POST', emptyModel._links.post.href, {statusCode: 201, body: undoneItem1});
 
         cy.mount(App);
         cy.get('#new-message').type('bar');
