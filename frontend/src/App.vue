@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import axios, {AxiosResponse, HttpStatusCode} from "axios";
-import {onMounted, onUpdated, Ref, ref} from "vue";
+import {onMounted, Ref, ref} from "vue";
 import {CollectionModel, Item, LinkCollection} from "@/types/CollectionModelTypes";
+import ItemList from "@/components/ItemList.vue";
 
 const hateoasUrl: string = 'http://localhost:8082/hateoas'
 
@@ -52,6 +53,7 @@ async function deleteItem(item: Item): Promise<void> {
         items.value.splice(i, 1);
       }
     }
+    items.value.sort(sortByDoneAndId);
   }
 }
 
@@ -65,6 +67,7 @@ async function setDoneStatus(url: string): Promise<void> {
     if (items.value[i].id == updatedItem.id) {
       items.value[i] = updatedItem;
     }
+    items.value.sort(sortByDoneAndId);
   }
 }
 
@@ -76,9 +79,6 @@ onMounted(async () => {
   itemEndpoints = itemModel._links;
 })
 
-onUpdated(() => {
-  items.value.sort(sortByDoneAndId);
-});
 </script>
 
 <template>
@@ -91,22 +91,11 @@ onUpdated(() => {
       <img id="plus" alt="" class="col-3 align-self-center" src="@/images/plus_white.png" @click="addNewItem"/>
     </div>
 
-    <div id="item-list" data-cy="item-list">
-      <div v-for="item in items" :key="item.id" :class="{ 'done': item.isDone, 'undone': !item.isDone}"
-           :data-cy="'item_' + item.id"
-           class="item-box row"
-      >
-        <p class="col align-self-end">{{ item.message }}</p>
-        <img alt="" class="col-2 align-self-center delete" src="@/images/trashcan.png"
-             @click="deleteItem(item)"/>
-        <img v-if="item.isDone" id="checkbox" alt="" class="col-2 align-self-center"
-             src="@/images/circle_checked_white.png"
-             @click="setDoneStatus(item._links.setToUndone.href)"/>
-        <img v-else id="checkbox" alt="" class="col-2 align-self-center" src="@/images/circle_empty_white.png"
-             @click="setDoneStatus(item._links.setToDone.href)"/>
-      </div>
-
-    </div>
+    <ItemList
+        :items=items
+        @delete="deleteItem"
+        @setDoneStatus="setDoneStatus"
+    />
 
   </div>
 </template>
@@ -122,38 +111,6 @@ $font-title: bold 7rem $font-stack;
 
 html {
   font-size: 62.5%;
-}
-
-.item-box {
-  height: 3em;
-  padding: 0 1em;
-  background-color: rgba($primary-color, 0.2);
-  border-radius: 0.5em;
-  font: $font-items;
-
-  &.done {
-    opacity: 0.3;
-  }
-
-  img {
-    height: 60px;
-    width: auto;
-    opacity: 0.6;
-
-    &:hover {
-      opacity: 1 !important;
-      cursor: pointer;
-    }
-  }
-
-  .delete {
-    opacity: 0;
-  }
-
-  &:hover {
-    box-shadow: 1px 1px rgba($shadow-color, 0.5);
-    background-color: rgba($primary-color, 0.4);
-  }
 }
 
 #app-container {
@@ -185,12 +142,5 @@ html {
       }
     }
   }
-}
-
-#item-list {
-  margin-top: 2em;
-  display: flex;
-  flex-direction: column;
-  row-gap: 0.5em;
 }
 </style>
