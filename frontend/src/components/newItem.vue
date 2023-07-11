@@ -8,7 +8,7 @@ let message: Ref<string> = ref('');
 let isValidMessage: boolean = false;
 let wasValidAttempt: boolean = true;
 
-watch(message, (currentValue, oldValue) => {
+watch(message, () => {
   isValidMessage = (message.value.trim().length !== 0);
   setErrorMessage()
 })
