@@ -3,6 +3,7 @@ import axios, {AxiosResponse, HttpStatusCode} from "axios";
 import {onMounted, Ref, ref} from "vue";
 import {CollectionModel, Item, LinkCollection} from "@/types/CollectionModelTypes";
 import ItemList from "@/components/ItemList.vue";
+import NewItem from "@/components/newItem.vue";
 
 const hateoasUrl: string = 'http://localhost:8082/hateoas'
 
@@ -11,7 +12,8 @@ let itemModel: CollectionModel;
 let itemEndpoints: LinkCollection;
 
 const items: Ref<Item[]> = ref([]);
-let newItemMessage: string = '';
+
+// alle axios requests in service.ts auslagern
 
 async function getHateoasModel(url: string): Promise<CollectionModel> {
   const response: AxiosResponse = await axios.get(url);
@@ -33,15 +35,13 @@ function sortByDoneAndId(a: Item, b: Item): number {
   return -1;
 }
 
-async function addNewItem(): Promise<void> {
+async function addNewItem(message): Promise<void> {
   const response: AxiosResponse = await axios.post(
       itemEndpoints.post.href,
-      {"message": newItemMessage}
+      {"message": message}
   );
-
   if (response.status === HttpStatusCode.Created) {
     items.value.push(response.data);
-    newItemMessage = '';
   }
 }
 
@@ -86,10 +86,9 @@ onMounted(async () => {
 
     <p id="title">to-do :</p>
 
-    <div id="new-item" class="item-box row">
-      <input id="new-message" v-model="newItemMessage" class="col" placeholder=". . . add new item" type="text"/>
-      <img id="plus" alt="" class="col-3 align-self-center" src="@/images/plus_white.png" @click="addNewItem"/>
-    </div>
+    <NewItem
+        @newMessage="addNewItem"
+    />
 
     <ItemList
         :items=items
@@ -126,21 +125,4 @@ html {
   color: rgba($primary-color, 0.6);
 }
 
-#new-item {
-  background-color: rgba($primary-color, 0.4);
-
-  input {
-    width: auto;
-    background-color: rgba($primary-color, 0);
-    border: none;
-
-    &:focus {
-      outline: none;
-
-      &::placeholder {
-        opacity: 0;
-      }
-    }
-  }
-}
 </style>
