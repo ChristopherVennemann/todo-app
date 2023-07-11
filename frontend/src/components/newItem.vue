@@ -48,14 +48,7 @@ const errorMessage: Ref<string> = ref(' ');
 </template>
 
 <style lang="scss" scoped>
-// scss variablen auslagern
-// in colorsAndFont.scss
-$primary-color: #FFFFFF;
-$shadow-color: #000000;
-$font-stack: MyPoppins, Calibri, sans-serif;
-$font-items: 1.6rem $font-stack;
-$font-title: bold 7rem $font-stack;
-$font-error: bold 1.3rem $font-stack;
+@import "src/assets/fontsAndColors";
 
 #new-item {
   background-color: rgba($primary-color, 0.4);
@@ -90,7 +83,8 @@ img {
 p {
   height: 2em;
   font: $font-error;
-  color: red;
+  color: $error-color;
+  opacity: 0.6;
 }
 
 </style>

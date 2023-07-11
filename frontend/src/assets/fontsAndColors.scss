@@ -1,0 +1,15 @@
+@font-face {
+  font-family: "MyPoppins";
+  font-weight: 400;
+  font-style: normal;
+  font-display: auto;
+  src: local("Poppins"), url("../../public/fonts/Poppins/Poppins-Light.ttf") format("truetype");
+}
+
+$primary-color: #FFFFFF;
+$shadow-color: #000000;
+$error-color: #FF0000;
+$font-stack: MyPoppins, Calibri, sans-serif;
+$font-items: 1.6rem $font-stack;
+$font-title: bold 7rem $font-stack;
+$font-error: bold 1.3rem $font-stack;

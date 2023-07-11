@@ -5,12 +5,7 @@
 </template>
 
 <style lang="scss" scoped>
-
-$primary-color: #FFFFFF;
-$shadow-color: #000000;
-$font-stack: MyPoppins, Calibri, sans-serif;
-$font-items: 1.6rem $font-stack;
-$font-title: bold 7rem $font-stack;
+@import "src/assets/fontsAndColors";
 
 .item-box {
   height: 3em;
