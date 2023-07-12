@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 
+const emit = defineEmits(['greeting']);
+
+function greet() {
+  emit('greeting', 'hello!')
+}
 </script>
 
 <template>
-  <button>Click Me!</button>
+  <button @click="greet">Click Me!</button>
 </template>
-
-<style lang="scss" scoped>
-
-</style>
