@@ -38,7 +38,10 @@ const errorMessage: Ref<string> = ref(' ');
 
 <template>
   <ItemBox id="new-item">
-    <input id="new-message" v-model="message" class="col" placeholder=". . . add new item" type="text"/>
+    <input id="new-message" v-model="message" class="col"
+           data-cy="textInput" placeholder=". . . add new item"
+           type="text"
+    />
     <img id="plus" alt="" class="col-3 align-self-center"
          src="@/images/plus_white.png"
          @click="sendMessage"

@@ -7,7 +7,6 @@ describe('ExampleComponent', () => {
     });
 
     it('emits an event', () => {
-
         cy.mount(ExampleComponent);
 
         cy.get('button')

@@ -1,0 +1,22 @@
+import NewItem from "@/components/NewItem.vue";
+import {mount} from "@vue/test-utils";
+
+describe('NewItem', () => {
+    it('renders', () => {
+        mount(NewItem);
+    })
+
+    it('emits the right event when plus-sign is clicked', () => {
+        const expectedString = 'test string';
+
+        cy.mount(NewItem);
+        cy.get('[data-cy="textInput"]').type(expectedString)
+        cy.get('[data-cy="addItemButton"]')
+            .click()
+            .vue()
+            .then((wrapper) => {
+                expect(wrapper.emitted('newMessage')).to.have.length(1);
+                expect(wrapper.emitted('newMessage')[0][0]).to.equal(expectedString);
+            });
+    });
+})
