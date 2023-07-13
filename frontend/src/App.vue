@@ -46,6 +46,7 @@ async function addNewItem(message): Promise<void> {
   );
   if (response.status === HttpStatusCode.Created) {
     items.value.push(response.data);
+    items.value.sort(sortByDoneAndId);
   }
 }
 
@@ -81,6 +82,7 @@ onMounted(async () => {
 
   items.value = itemModel?._embedded ? itemModel._embedded.itemResponseList : [];
   itemEndpoints = itemModel._links;
+  items.value.sort(sortByDoneAndId);
 })
 
 </script>
