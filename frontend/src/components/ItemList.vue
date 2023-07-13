@@ -40,10 +40,6 @@ defineEmits(['delete', 'setDoneStatus'])
   row-gap: 0.5em;
 }
 
-.delete {
-  opacity: 0;
-}
-
 img {
   height: 60px;
   width: auto;
