@@ -9,12 +9,17 @@ defineEmits(['delete', 'setDoneStatus'])
 
 <template>
   <div id="item-list" data-cy="item-list">
-    <ItemBox v-for="item in items" :key="item.id" :class="{ 'done': item.isDone, 'undone': !item.isDone}"
-             :data-cy="'item_' + item.id">
+    <ItemBox v-for="item in items"
+             :key="item.id"
+             :class="{ 'done': item.isDone, 'undone': !item.isDone}"
+             :data-cy="'item_' + item.id"
+    >
       <p class="col align-self-end">{{ item.message }}</p>
-      <img alt="" class="col-2 align-self-center delete" src="@/images/trashcan.png"
+      <img alt="" class="col-2 align-self-center delete"
+           src="@/images/trashcan.png"
            @click="$emit('delete', item)"/>
-      <img v-if="item.isDone" id="checkbox" alt="" class="col-2 align-self-center"
+      <img v-if="item.isDone" id="checkbox" alt=""
+           class="col-2 align-self-center"
            src="@/images/circle_checked_white.png"
            @click="$emit('setDoneStatus', item._links.setToUndone.href)"
       />

@@ -43,6 +43,7 @@ const errorMessage: Ref<string> = ref(' ');
            type="text"
     />
     <img id="plus" alt="" class="col-3 align-self-center"
+         data-cy="addItemButton"
          src="@/images/plus_white.png"
          @click="sendMessage"
     />

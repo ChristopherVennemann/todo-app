@@ -10,10 +10,16 @@ describe('<App />', () => {
 
     it('gets hateoas model from hateoas endpoint', () => {
         const hateoas: CollectionModel = TestData.generateHateoasModel();
-        cy.intercept('GET', hateoas._links.self.href, {status: 200, body: hateoas}).as('getHateoas');
+        cy.intercept('GET', hateoas._links.self.href, {
+            status: 200,
+            body: hateoas
+        }).as('getHateoas');
 
         const emptyModel: CollectionModel = TestData.generateItemModel();
-        cy.intercept('GET', hateoas._links.itemCollection.href, {status: 200, body: emptyModel}).as('getItems');
+        cy.intercept('GET', hateoas._links.itemCollection.href, {
+            status: 200,
+            body: emptyModel
+        }).as('getItems');
 
         cy.mount(App);
 
@@ -30,10 +36,16 @@ describe('<App />', () => {
 
     it('serializes input value to post request body', () => {
         const hateoas: CollectionModel = TestData.generateHateoasModel();
-        cy.intercept('GET', hateoas._links.self.href, {statusCode: 200, body: hateoas});
+        cy.intercept('GET', hateoas._links.self.href, {
+            statusCode: 200,
+            body: hateoas
+        });
 
         const emptyModel: CollectionModel = TestData.generateItemModel();
-        cy.intercept('GET', hateoas._links.itemCollection.href, {statusCode: 200, body: emptyModel});
+        cy.intercept('GET', hateoas._links.itemCollection.href, {
+            statusCode: 200,
+            body: emptyModel
+        });
 
         const expectedMessage: String = 'item 1';
         cy.intercept('POST', emptyModel._links.post.href, {}).as('postItem');
@@ -50,33 +62,52 @@ describe('<App />', () => {
 
     it('appends post response body to list', () => {
         const hateoas: CollectionModel = TestData.generateHateoasModel();
-        cy.intercept('GET', hateoas._links.self.href, {statusCode: 200, body: hateoas});
+        cy.intercept('GET', hateoas._links.self.href, {
+            statusCode: 200,
+            body: hateoas
+        });
 
         const emptyModel: CollectionModel = TestData.generateItemModel();
-        cy.intercept('GET', hateoas._links.itemCollection.href, {statusCode: 200, body: emptyModel});
+        cy.intercept('GET', hateoas._links.itemCollection.href, {
+            statusCode: 200,
+            body: emptyModel
+        });
 
-        const undoneItem1 = TestData.generateItem(1, "test", false);
-        cy.intercept('POST', emptyModel._links.post.href, {statusCode: 201, body: undoneItem1});
+        const undoneItem = TestData.generateItem(1, "test", false);
+        cy.intercept('POST', emptyModel._links.post.href, {
+            statusCode: 201,
+            body: undoneItem
+        });
 
         cy.mount(App);
-        cy.get('#plus').click();
+        cy.get('[data-cy="textInput"]').type(undoneItem.message);
+        cy.get('[data-cy="addItemButton"]').click();
 
-        cy.get('[data-cy=item_1]').should((item) => {
+        cy.get('[data-cy="item_1"]').should((item) => {
             // @ts-ignore
-            expect(item).to.contain(undoneItem1.message);
+            expect(item).to.contain(undoneItem.message);
         });
     })
 
     it('clears new-message field on successful creation', () => {
         const hateoas: CollectionModel = TestData.generateHateoasModel();
-        cy.intercept('GET', hateoas._links.self.href, {statusCode: 200, body: hateoas});
+        cy.intercept('GET', hateoas._links.self.href, {
+            statusCode: 200,
+            body: hateoas
+        });
 
         const emptyModel = TestData.generateItemModel();
-        cy.intercept('GET', hateoas._links.itemCollection.href, {statusCode: 200, body: emptyModel}).as('getAll');
+        cy.intercept('GET', hateoas._links.itemCollection.href, {
+            statusCode: 200,
+            body: emptyModel
+        }).as('getAll');
 
         const undoneItem1 = TestData.generateItem(1, "test", false)
         const expectedEmptyString: String = '';
-        cy.intercept('POST', emptyModel._links.post.href, {statusCode: 201, body: undoneItem1});
+        cy.intercept('POST', emptyModel._links.post.href, {
+            statusCode: 201,
+            body: undoneItem1
+        });
 
         cy.mount(App);
         cy.get('#new-message').type('bar');
@@ -87,11 +118,17 @@ describe('<App />', () => {
 
     it('deletes the item when delete button is clicked', () => {
         const hateoas: CollectionModel = TestData.generateHateoasModel();
-        cy.intercept('GET', hateoas._links.self.href, {statusCode: 200, body: hateoas});
+        cy.intercept('GET', hateoas._links.self.href, {
+            statusCode: 200,
+            body: hateoas
+        });
 
         const item: Item = TestData.generateItem(1, "test", false);
         const model: CollectionModel = TestData.generateItemModel([item])
-        cy.intercept('GET', hateoas._links.itemCollection.href, {statusCode: 200, body: model});
+        cy.intercept('GET', hateoas._links.itemCollection.href, {
+            statusCode: 200,
+            body: model
+        });
         cy.intercept('DELETE', item._links.delete.href, {statusCode: 204}).as('deleteRequest');
 
         cy.mount(App);
@@ -102,17 +139,29 @@ describe('<App />', () => {
 
     it('changes item status when done-checkbox is clicked', () => {
         const hateoas: CollectionModel = TestData.generateHateoasModel();
-        cy.intercept('GET', hateoas._links.self.href, {statusCode: 200, body: hateoas});
+        cy.intercept('GET', hateoas._links.self.href, {
+            statusCode: 200,
+            body: hateoas
+        });
 
         const undoneItem: Item = TestData.generateItem(1, "test", false);
         const model = TestData.generateItemModel([undoneItem])
-        cy.intercept('GET', hateoas._links.itemCollection.href, {statusCode: 200, body: model});
+        cy.intercept('GET', hateoas._links.itemCollection.href, {
+            statusCode: 200,
+            body: model
+        });
 
         const doneItem: Item = TestData.generateItem(1, "test", true);
         const setToDoneUrl = undoneItem._links.setToDone.href;
         const setToUndoneUrl = doneItem._links.setToUndone.href;
-        cy.intercept('PUT', setToDoneUrl, {statusCode: 200, body: doneItem}).as('doneRequest');
-        cy.intercept('PUT', setToUndoneUrl, {statusCode: 200, body: undoneItem}).as('undoneRequest');
+        cy.intercept('PUT', setToDoneUrl, {
+            statusCode: 200,
+            body: doneItem
+        }).as('doneRequest');
+        cy.intercept('PUT', setToUndoneUrl, {
+            statusCode: 200,
+            body: undoneItem
+        }).as('undoneRequest');
 
         cy.mount(App);
 
@@ -131,11 +180,17 @@ describe('<App />', () => {
 
     it('updates item list after done status change', () => {
         const hateoas: CollectionModel = TestData.generateHateoasModel();
-        cy.intercept('GET', hateoas._links.self.href, {statusCode: 200, body: hateoas});
+        cy.intercept('GET', hateoas._links.self.href, {
+            statusCode: 200,
+            body: hateoas
+        });
 
         const undoneItem: Item = TestData.generateItem(1, "test", false);
         const model: CollectionModel = TestData.generateItemModel([undoneItem])
-        cy.intercept('GET', hateoas._links.itemCollection.href, {statusCode: 200, body: model});
+        cy.intercept('GET', hateoas._links.itemCollection.href, {
+            statusCode: 200,
+            body: model
+        });
 
         const doneItem: Item = TestData.generateItem(1, "test", true);
         const setDoneUrl: string = undoneItem._links.setToDone.href;
@@ -153,12 +208,18 @@ describe('<App />', () => {
 
     it('sorts done items to the end of the list', () => {
         const hateoas: CollectionModel = TestData.generateHateoasModel();
-        cy.intercept('GET', hateoas._links.self.href, {statusCode: 200, body: hateoas});
+        cy.intercept('GET', hateoas._links.self.href, {
+            statusCode: 200,
+            body: hateoas
+        });
 
         const undoneItem1: Item = TestData.generateItem(1, "test", false);
         const undoneItem2: Item = TestData.generateItem(2, "test", false);
         const model: CollectionModel = TestData.generateItemModel([undoneItem1, undoneItem2]);
-        cy.intercept('GET', hateoas._links.itemCollection.href, {statusCode: 200, body: model});
+        cy.intercept('GET', hateoas._links.itemCollection.href, {
+            statusCode: 200,
+            body: model
+        });
 
         const doneItem1: Item = TestData.generateItem(1, "test", true);
         const setDoneUrl: string = undoneItem1._links.setToDone.href;

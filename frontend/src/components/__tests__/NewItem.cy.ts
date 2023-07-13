@@ -15,7 +15,9 @@ describe('NewItem', () => {
             .click()
             .vue()
             .then((wrapper) => {
+                // @ts-ignore
                 expect(wrapper.emitted('newMessage')).to.have.length(1);
+                // @ts-ignore
                 expect(wrapper.emitted('newMessage')[0][0]).to.equal(expectedString);
             });
     });

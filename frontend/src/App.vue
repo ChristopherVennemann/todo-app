@@ -1,9 +1,13 @@
 <script lang="ts" setup>
 import axios, {AxiosResponse, HttpStatusCode} from "axios";
 import {onMounted, Ref, ref} from "vue";
-import {CollectionModel, Item, LinkCollection} from "@/types/CollectionModelTypes";
+import {
+  CollectionModel,
+  Item,
+  LinkCollection
+} from "@/types/CollectionModelTypes";
 import ItemList from "@/components/ItemList.vue";
-import NewItem from "@/components/newItem.vue";
+import NewItem from "@/components/NewItem.vue";
 
 const hateoasUrl: string = 'http://localhost:8082/hateoas'
 
