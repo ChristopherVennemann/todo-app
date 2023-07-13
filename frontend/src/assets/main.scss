@@ -28,6 +28,12 @@ body {
     opacity: 0.3;
   }
 
+  .delete {
+    &:hover {
+      opacity: 1 !important;
+    }
+  }
+
   &:hover {
     box-shadow: 1px 1px rgba($shadow-color, 0.5);
     background-color: rgba($primary-color, 0.4);

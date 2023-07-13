@@ -1,15 +1,30 @@
 <script lang="ts" setup>
 
-// item box als globale klasse, nicht component
-// ein item hier drinne in ein div packen
-// und dann hover wie vorher lösen
+import ItemBox from "@/components/ItemBox.vue";
+import CategorySelector from "@/components/CategorySelector.vue";
 
 defineProps(['items']);
 defineEmits(['delete', 'setDoneStatus'])
 
+let showDoneItems: boolean = true;
+let showUndoneItems: boolean = true;
+
+function setShowStatus(selected: string): void {
+  if (selected === 'all') {
+    showDoneItems = showUndoneItems = true;
+  } else if (selected === 'unfinished') {
+    showUndoneItems = true;
+    showDoneItems = false;
+  } else {
+    showUndoneItems = false;
+    showDoneItems = true;
+  }
+}
+
 </script>
 
 <template>
+  <CategorySelector></CategorySelector>
   <div id="item-list" data-cy="item-list">
     <div v-for="item in items"
          :key="item.id" :class="{ 'done': item.isDone, 'undone': !item.isDone}"
@@ -61,6 +76,5 @@ defineEmits(['delete', 'setDoneStatus'])
     }
   }
 }
-
 
 </style>
