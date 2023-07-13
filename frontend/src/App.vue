@@ -92,7 +92,8 @@ function setItemSelection(category: string) {
 function setVisibleItems() {
   switch (itemSelection) {
     case 'all':
-      visibleItems.value = allItems;
+      visibleItems.value = [];
+      visibleItems.value.push(...allItems);
       break;
     case 'unfinished':
       visibleItems.value = [];
