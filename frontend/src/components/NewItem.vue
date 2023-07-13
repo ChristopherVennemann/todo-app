@@ -32,7 +32,6 @@ function setErrorMessage() {
 }
 
 const errorMessage: Ref<string> = ref(' ');
-
 </script>
 
 <template>
@@ -69,7 +68,6 @@ const errorMessage: Ref<string> = ref(' ');
       }
     }
   }
-
 }
 
 img {
@@ -89,5 +87,4 @@ p {
   color: $error-color;
   opacity: 0.6;
 }
-
 </style>
