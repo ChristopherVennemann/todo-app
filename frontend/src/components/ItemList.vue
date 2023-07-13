@@ -1,12 +1,10 @@
 <script lang="ts" setup>
-import CategorySelector from "@/components/CategorySelector.vue";
 
 defineProps(['items']);
 defineEmits(['delete', 'setDoneStatus'])
 </script>
 
 <template>
-  <CategorySelector/>
   <div id="item-list" data-cy="item-list">
     <div v-for="item in items"
          :key="item.id" :class="{ 'done': item.isDone, 'undone': !item.isDone}"

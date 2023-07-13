@@ -3,7 +3,7 @@ import {Ref, ref} from "vue";
 
 const emit = defineEmits(['selectedCategory']);
 
-const currentTab: Ref<string> = ref('unfinished');
+const currentTab: Ref<string> = ref('all');
 
 function setCurrentTabTo(tab: string) {
   currentTab.value = tab;

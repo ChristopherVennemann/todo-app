@@ -8,6 +8,7 @@ import {
 } from "@/types/CollectionModelTypes";
 import ItemList from "@/components/ItemList.vue";
 import NewItem from "@/components/NewItem.vue";
+import CategorySelector from "@/components/CategorySelector.vue";
 
 const hateoasUrl: string = 'http://localhost:8082/hateoas'
 
@@ -15,7 +16,9 @@ let hateoasModel: CollectionModel;
 let itemModel: CollectionModel;
 let itemEndpoints: LinkCollection;
 
-const items: Ref<Item[]> = ref([]);
+let allItems: Item[] = [];
+const visibleItems: Ref<Item[]> = ref([]);
+let itemSelection: string = 'all';
 
 // alle axios requests in service.ts auslagern
 
@@ -45,20 +48,22 @@ async function addNewItem(message): Promise<void> {
       {"message": message}
   );
   if (response.status === HttpStatusCode.Created) {
-    items.value.push(response.data);
-    items.value.sort(sortByDoneAndId);
+    allItems.push(response.data);
+    setVisibleItems()
+    visibleItems.value.sort(sortByDoneAndId);
   }
 }
 
 async function deleteItem(item: Item): Promise<void> {
   const response: AxiosResponse = await axios.delete(item._links.delete.href);
   if (response.status == HttpStatusCode.NoContent) {
-    for (let i = 0; i < items.value.length; i++) {
-      if (items.value[i].id == item.id) {
-        items.value.splice(i, 1);
+    for (let i = 0; i < allItems.length; i++) {
+      if (allItems[i].id == item.id) {
+        allItems.splice(i, 1);
       }
     }
-    items.value.sort(sortByDoneAndId);
+    setVisibleItems()
+    visibleItems.value.sort(sortByDoneAndId);
   }
 }
 
@@ -68,23 +73,54 @@ async function setDoneStatus(url: string): Promise<void> {
     return;
   }
   const updatedItem: Item = response.data;
-  for (let i = 0; i < items.value.length; i++) {
-    if (items.value[i].id == updatedItem.id) {
-      items.value[i] = updatedItem;
+  for (let i = 0; i < allItems.length; i++) {
+    if (allItems[i].id == updatedItem.id) {
+      allItems[i] = updatedItem;
     }
-    items.value.sort(sortByDoneAndId);
+    setVisibleItems()
+    visibleItems.value.sort(sortByDoneAndId);
+  }
+}
+
+function setItemSelection(category: string) {
+  itemSelection = category;
+
+  setVisibleItems()
+  visibleItems.value.sort(sortByDoneAndId);
+}
+
+function setVisibleItems() {
+  switch (itemSelection) {
+    case 'all':
+      visibleItems.value = allItems;
+      break;
+    case 'unfinished':
+      visibleItems.value = [];
+      for (const item of allItems) {
+        if (!item.isDone) {
+          visibleItems.value.push(item);
+        }
+      }
+      break;
+    case 'finished':
+      visibleItems.value = [];
+      for (const item of allItems) {
+        if (item.isDone) {
+          visibleItems.value.push(item);
+        }
+      }
   }
 }
 
 onMounted(async () => {
   hateoasModel = await getHateoasModel(hateoasUrl);
   itemModel = await getItems(hateoasModel._links.itemCollection.href);
-
-  items.value = itemModel?._embedded ? itemModel._embedded.itemResponseList : [];
   itemEndpoints = itemModel._links;
-  items.value.sort(sortByDoneAndId);
-})
 
+  allItems = itemModel?._embedded ? itemModel._embedded.itemResponseList : [];
+  setVisibleItems()
+  visibleItems.value.sort(sortByDoneAndId);
+})
 </script>
 
 <template>
@@ -92,12 +128,17 @@ onMounted(async () => {
 
     <p id="title">to-do :</p>
 
+
+    <CategorySelector
+        @selectedCategory="setItemSelection"
+    />
+
     <NewItem
         @newMessage="addNewItem"
     />
 
     <ItemList
-        :items=items
+        :items=visibleItems
         @delete="deleteItem"
         @setDoneStatus="setDoneStatus"
     />
