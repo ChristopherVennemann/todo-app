@@ -1,9 +1,8 @@
 import NewItem from "@/components/NewItem.vue";
-import {mount} from "@vue/test-utils";
 
 describe('NewItem', () => {
     it('renders', () => {
-        mount(NewItem);
+        cy.mount(NewItem);
     })
 
     it('emits the right event when plus-sign is clicked', () => {

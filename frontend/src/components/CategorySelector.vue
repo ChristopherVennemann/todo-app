@@ -15,16 +15,19 @@ function setCurrentTabTo(tab: string) {
   <div class="categories-tab">
     <span :class="{ 'active': currentTab==='all'}"
           class="category"
+          data-cy="category-all"
           @click="setCurrentTabTo('all')"
     > All </span>
     <span> | </span>
     <span :class="{ 'active': currentTab==='unfinished'}"
           class="category"
+          data-cy="category-unfinished"
           @click="setCurrentTabTo('unfinished')"
     > Unfinished </span>
     <span> | </span>
     <span :class="{ 'active': currentTab==='finished'}"
           class="category"
+          data-cy="category-finished"
           @click="setCurrentTabTo('finished')"
     > Finished </span>
   </div>
