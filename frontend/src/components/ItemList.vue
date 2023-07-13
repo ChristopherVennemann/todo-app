@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 
-import ItemBox from "@/components/ItemBox.vue";
+// item box als globale klasse, nicht component
+// ein item hier drinne in ein div packen
+// und dann hover wie vorher lösen
 
 defineProps(['items']);
 defineEmits(['delete', 'setDoneStatus'])
@@ -9,10 +11,10 @@ defineEmits(['delete', 'setDoneStatus'])
 
 <template>
   <div id="item-list" data-cy="item-list">
-    <ItemBox v-for="item in items"
-             :key="item.id"
-             :class="{ 'done': item.isDone, 'undone': !item.isDone}"
-             :data-cy="'item_' + item.id"
+    <div v-for="item in items"
+         :key="item.id" :class="{ 'done': item.isDone, 'undone': !item.isDone}"
+         :data-cy="'item_' + item.id"
+         class="item-box row"
     >
       <p class="col align-self-end">{{ item.message }}</p>
       <img alt="" class="col-2 align-self-center delete"
@@ -27,12 +29,11 @@ defineEmits(['delete', 'setDoneStatus'])
            src="@/images/circle_empty_white.png"
            @click="$emit('setDoneStatus', item._links.setToDone.href)"
       />
-    </ItemBox>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-
 #item-list {
   margin-top: 2em;
   display: flex;
@@ -40,15 +41,26 @@ defineEmits(['delete', 'setDoneStatus'])
   row-gap: 0.5em;
 }
 
-img {
-  height: 60px;
-  width: auto;
-  opacity: 0.6;
+.item-box {
+  &:hover .delete {
+    opacity: 0.6;
+  }
 
-  &:hover {
-    opacity: 1 !important;
-    cursor: pointer;
+  img {
+    height: 60px;
+    width: auto;
+    opacity: 0.6;
+
+    &.delete {
+      opacity: 0;
+    }
+
+    &:hover {
+      opacity: 1 !important;
+      cursor: pointer;
+    }
   }
 }
+
 
 </style>

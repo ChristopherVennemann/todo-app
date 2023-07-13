@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import ItemBox from "@/components/ItemBox.vue";
 import {Ref, ref, watch} from "vue";
 
 let emit = defineEmits(['newMessage']);
@@ -37,7 +36,7 @@ const errorMessage: Ref<string> = ref(' ');
 </script>
 
 <template>
-  <ItemBox id="new-item">
+  <div id="new-item" class="item-box row">
     <input id="new-message" v-model="message" class="col"
            data-cy="textInput" placeholder=". . . add new item"
            type="text"
@@ -47,7 +46,7 @@ const errorMessage: Ref<string> = ref(' ');
          src="@/images/plus_white.png"
          @click="sendMessage"
     />
-  </ItemBox>
+  </div>
   <p>{{ errorMessage }}</p>
 </template>
 
