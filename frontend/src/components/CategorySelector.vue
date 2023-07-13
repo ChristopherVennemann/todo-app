@@ -14,15 +14,17 @@ function setCurrentTabTo(tab: string) {
 <template>
   <div class="categories-tab">
     <span :class="{ 'active': currentTab==='all'}"
-
+          class="category"
           @click="setCurrentTabTo('all')"
     > All </span>
-    |
+    <span> | </span>
     <span :class="{ 'active': currentTab==='unfinished'}"
+          class="category"
           @click="setCurrentTabTo('unfinished')"
     > Unfinished </span>
-    |
+    <span> | </span>
     <span :class="{ 'active': currentTab==='finished'}"
+          class="category"
           @click="setCurrentTabTo('finished')"
     > Finished </span>
   </div>
@@ -38,9 +40,11 @@ function setCurrentTabTo(tab: string) {
   span {
     opacity: 0.6;
 
-    &:hover {
-      cursor: pointer;
-      opacity: 1;
+    &.category {
+      &:hover {
+        cursor: pointer;
+        opacity: 1;
+      }
     }
 
     &.active {
@@ -49,4 +53,5 @@ function setCurrentTabTo(tab: string) {
     }
   }
 }
+
 </style>
