@@ -7,7 +7,8 @@ defineEmits(['delete', 'setDoneStatus'])
 <template>
   <div id="item-list" data-cy="item-list">
     <div v-for="item in items"
-         :key="item.id" :class="{ 'done': item.isDone, 'undone': !item.isDone}"
+         :key="item.id"
+         :class="{ 'done': item.isDone, 'undone': !item.isDone}"
          :data-cy="'item_' + item.id"
          class="item-box row"
     >
