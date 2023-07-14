@@ -234,4 +234,34 @@ describe('<App />', () => {
             .should('have.attr', 'data-cy')
             .and('equals', 'item_1');
     })
+
+    it('shows only done/undone items when these categories are selected', () => {
+        const hateoas: CollectionModel = TestData.generateHateoasModel();
+        cy.intercept('GET', hateoas._links.self.href, {
+            statusCode: 200,
+            body: hateoas
+        });
+
+        const doneItem = TestData.generateItem(1, "test", true);
+        const undoneItem: Item = TestData.generateItem(2, "test", false);
+        const model: CollectionModel = TestData.generateItemModel([doneItem, undoneItem]);
+        cy.intercept('GET', hateoas._links.itemCollection.href, {
+            statusCode: 200,
+            body: model
+        });
+
+        cy.mount(App);
+
+        cy.get('[data-cy="item_1"]').should('exist');
+        cy.get('[data-cy="item_2"]').should('exist');
+
+        cy.get('[data-cy="category-unfinished"]').click();
+        cy.get('[data-cy="item_1"]').should('not.exist');
+        cy.get('[data-cy="item_2"]').should('exist');
+
+        cy.get('[data-cy="category-finished"]').click();
+        cy.get('[data-cy="item_1"]').should('exist');
+        cy.get('[data-cy="item_2"]').should('not.exist');
+    });
+
 })

@@ -41,20 +41,18 @@ function setCurrentTabTo(tab: string) {
   font: $font-categories;
 
   span {
-    opacity: 0.6;
+    opacity: 0.4;
 
     &.category {
       &:hover {
         cursor: pointer;
-        opacity: 1;
+        opacity: 0.6;
       }
     }
 
     &.active {
-      opacity: 1;
-      text-decoration-line: underline;
+      opacity: 0.6;
     }
   }
 }
-
 </style>
