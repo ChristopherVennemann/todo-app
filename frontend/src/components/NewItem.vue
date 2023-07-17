@@ -4,8 +4,10 @@ import {Ref, ref, watch} from "vue";
 let emit = defineEmits(['newMessage']);
 
 let message: Ref<string> = ref('');
+const inputElement: Ref<null> = ref(null);
 let isValidMessage: boolean = false;
 let wasValidAttempt: boolean = true;
+
 
 watch(message, () => {
   isValidMessage = (message.value.trim().length !== 0);
@@ -20,6 +22,7 @@ function sendMessage() {
   } else {
     wasValidAttempt = false;
   }
+  inputElement.value.focus();
   setErrorMessage()
 }
 
@@ -36,7 +39,7 @@ const errorMessage: Ref<string> = ref(' ');
 
 <template>
   <div id="new-item" class="item-box row">
-    <input id="new-message" v-model="message" class="col"
+    <input id="new-message" ref="inputElement" v-model="message" class="col"
            data-cy="textInput" placeholder=". . . add new item"
            type="text"
            @keydown.enter="sendMessage"

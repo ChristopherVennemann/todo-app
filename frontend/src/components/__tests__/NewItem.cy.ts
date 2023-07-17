@@ -25,7 +25,8 @@ describe('NewItem', () => {
         const expectedString = 'test string';
 
         cy.mount(NewItem);
-        cy.get('[data-cy="textInput"]').type(expectedString + '{enter}')
+        cy.get('[data-cy="textInput"]')
+            .type(expectedString + '{enter}')
             .vue()
             .then((wrapper) => {
                 // @ts-ignore
@@ -33,5 +34,14 @@ describe('NewItem', () => {
                 // @ts-ignore
                 expect(wrapper.emitted('newMessage')[0][0]).to.equal(expectedString);
             });
+    })
+
+    it('returns focus in the input element after a the plus button is clicked', () => {
+        cy.mount(NewItem);
+        cy.get('[data-cy="textInput"]').type('test');
+        cy.get('[data-cy="addItemButton"]')
+            .click();
+
+        cy.get('[data-cy="textInput"]').should('have.focus');
     })
 })
