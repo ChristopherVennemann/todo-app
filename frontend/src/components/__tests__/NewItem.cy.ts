@@ -20,4 +20,18 @@ describe('NewItem', () => {
                 expect(wrapper.emitted('newMessage')[0][0]).to.equal(expectedString);
             });
     });
+
+    it('submits new item when input has focus and enter is pressed', () => {
+        const expectedString = 'test string';
+
+        cy.mount(NewItem);
+        cy.get('[data-cy="textInput"]').type(expectedString + '{enter}')
+            .vue()
+            .then((wrapper) => {
+                // @ts-ignore
+                expect(wrapper.emitted('newMessage')).to.have.length(1);
+                // @ts-ignore
+                expect(wrapper.emitted('newMessage')[0][0]).to.equal(expectedString);
+            });
+    })
 })

@@ -39,6 +39,7 @@ const errorMessage: Ref<string> = ref(' ');
     <input id="new-message" v-model="message" class="col"
            data-cy="textInput" placeholder=". . . add new item"
            type="text"
+           @keydown.enter="sendMessage"
     />
     <img id="plus" alt="" class="col-3 align-self-center"
          data-cy="addItemButton"
